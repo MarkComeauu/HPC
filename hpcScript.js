@@ -15,6 +15,7 @@ app.controller( "myCtrl", function($scope){
 	$scope.toggleresults = function(){
 		$("#Results").toggle();
 		$("#Input").toggle();
+		$scope.myonchange();
 	}
 	
 	//onchange for all inputs
@@ -25,7 +26,7 @@ app.controller( "myCtrl", function($scope){
 		$scope.equity = $scope.downpayment/$scope.price;
 		$scope.pmi = ($scope.price - $scope.downpayment)*0.01;
 		
-		//update salvage discounted value & monthly payment
+		//initialize salvage discounted value & monthly payment
 		$scope.salvagedisc = $scope.salvage*(1/((1 + $scope.discountrate)**$scope.loanterm));
 		$scope.monthlypmt = 0;
 		
@@ -42,20 +43,35 @@ app.controller( "myCtrl", function($scope){
 			
 			//if this is the base year
 			if( i == 0 ){
+				//closing costs
 				if( $scope.downpayment != 0 )
 					$scope.tempobj.costs.push( {"name":"Down Payment","value":$scope.downpayment} );
-				if( $scope.settlement != 0 )
-					$scope.tempobj.costs.push( {"name":"Settlement Fee", "value":$scope.settlement} );
-				if( $scope.lendertitle != 0 )
-					$scope.tempobj.costs.push( {"name":"Lender Title Insurance", "value":$scope.lendertitle} );
-				if( $scope.deed != 0 )
-					$scope.tempobj.costs.push( {"name":"Deed Recording", "value":$scope.deed} );
-				if( $scope.mortgage != 0 )
-					$scope.tempobj.costs.push( {"name":"Mortgage Recording", "value":$scope.mortgage} );
-				if( $scope.transfertax != 0 )
-					$scope.tempobj.costs.push( {"name":"Transfer Tax", "value":$scope.transfertax} );
 				if( $scope.titleinsurance != 0 )
 					$scope.tempobj.costs.push( {"name":"Title Insurance", "value":$scope.titleinsurance} );
+				
+				$scope.tempobj.costs.push( {"name":"Settlement Fee", "value":695} );
+				$scope.tempobj.costs.push( {"name":"Lender Title Insurance", "value":($scope.price-$scope.downpayment)*0.00265} );
+				$scope.tempobj.costs.push( {"name":"Deed Recording", "value":50} );
+				$scope.tempobj.costs.push( {"name":"Mortgage Recording", "value":150} );
+				$scope.tempobj.costs.push( {"name":"Transfer Tax", "value":$scope.price*0.0075} );
+				
+				//inspections
+				if( $scope.building )
+					$scope.tempobj.costs.push( {"name":"Building Inspection", "value":400} );
+				if( $scope.sewage )
+					$scope.tempobj.costs.push( {"name":"Sewage Inspection", "value":600} );
+				if( $scope.waterinsp )
+					$scope.tempobj.costs.push( {"name":"Water Inspection", "value":400} );
+				if( $scope.radonair )
+					$scope.tempobj.costs.push( {"name":"Radon Air Inspection", "value":1200} );
+				if( $scope.radonwater )
+					$scope.tempobj.costs.push( {"name":"Radon Water Inspection", "value":250} );
+				if( $scope.leadpaint )
+					$scope.tempobj.costs.push( {"name":"Lead Paint Inspection", "value":1250} );
+				if( $scope.pests )
+					$scope.tempobj.costs.push( {"name":"Pest Inspection", "value":100} );
+				if( $scope.hazardouswaste )
+					$scope.tempobj.costs.push( {"name":"Hazardous Waste Inspection", "value":750} );
 				
 				for( c in $scope.tempobj.costs ){
 					$scope.tempobj.subtotal += $scope.tempobj.costs[c].value;
@@ -151,14 +167,14 @@ app.controller( "myCtrl", function($scope){
 		$scope.interestrate = 0.055;
 		$scope.monthlypmt = 0;
 		$scope.taxes = 0;
-		$scope.salvage = 0;
-		$scope.discountrate = 0.03;
-		$scope.salvagedisc = $scope.salvage*(1/((1 + $scope.discountrate)**$scope.loanterm));
-		$scope.settlement = 0;
-		$scope.lendertitle = 0;
-		$scope.deed = 0;
-		$scope.mortgage = 0;
-		$scope.transfertax = 0;
+		$scope.building = false;
+		$scope.sewage = false;
+		$scope.waterinsp = false;
+		$scope.radonair = false;
+		$scope.radonwater = false;
+		$scope.leadpaint = false;
+		$scope.pests = false;
+		$scope.hazardouswaste = false;
 		$scope.titleinsurance = 0;
 		$scope.insurance = undefined;
 		$scope.heat = undefined;
@@ -166,6 +182,8 @@ app.controller( "myCtrl", function($scope){
 		$scope.water = undefined;
 		$scope.wifi = undefined;
 		$scope.maintenance = undefined;
+		$scope.salvage = 0;
+		$scope.discountrate = 0.03;
 		
 		$scope.myonchange();
 	}
@@ -181,14 +199,9 @@ app.controller( "myCtrl", function($scope){
 		$scope.loanterm = 30;
 		$scope.interestrate = 0.055;
 		$scope.taxes = 4400;
-		$scope.salvage = 500000.00;
-		$scope.discountrate = 0.03;
-		$scope.salvagedisc = $scope.salvage*(1/((1 + $scope.discountrate)**$scope.loanterm));
-		$scope.settlement = 695;
-		$scope.lendertitle = 923;
-		$scope.deed = 50;
-		$scope.mortgage = 150;
-		$scope.transfertax = 2625;
+		$scope.building = true;
+		$scope.sewage = true;
+		$scope.waterinsp = true;
 		$scope.titleinsurance = 342;
 		$scope.insurance = 800;
 		$scope.heat = 1200;
@@ -196,6 +209,8 @@ app.controller( "myCtrl", function($scope){
 		$scope.water = 0;
 		$scope.wifi = 720;
 		$scope.maintenance = 1200;
+		$scope.salvage = 500000.00;
+		$scope.discountrate = 0.03;
 		
 		//update
 		$scope.myonchange();

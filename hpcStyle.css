@@ -1,5 +1,5 @@
 @media print{
-	.noPrint{
+	#Input{
 		display: none;
 	}
 	#Results{
@@ -21,6 +21,10 @@ input{
 input[type=radio]{
 	width: initial;
 	margin: 10px 5px 0 0;
+}
+input[type=checkbox]{
+	margin-top: 10px;
+	width: initial;
 }
 ul{
 	list-style-type: none;
@@ -46,9 +50,7 @@ ul{
 	top: 15px;
 }
 #ResultsButtons{
-	position: absolute;
-	top: 1em;
-	right: 1em;
+	text-align: center;
 }
 #SnapshotTable td{
 	padding: 5px;

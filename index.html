@@ -3,7 +3,6 @@
 <html lang="en-US">
 	<!-- open header -->
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -23,7 +22,7 @@
 			<!-- input form -->
 			<div id="input-form" ng-app="myApp" ng-controller="myCtrl">
 				<!-- panel -->
-				<div id="Input" class="panel panel-primary noPrint">
+				<div id="Input" class="panel panel-primary">
 					<!-- panel head -->
 					<div class="panel-heading">
 						<h2>Home Purchase Calculator</h2>
@@ -47,32 +46,32 @@
 							<div class="form-group">
 								<label class="control-label col-sm-6" for="PurchasePrice">Purchase Price:</label>
 								<div class="col-sm-6">
-									<input id="PurchasePrice" ng-model="price" ng-change="myonchange()" type="number" min="0" required />
+									<input id="PurchasePrice" ng-model="price" type="number" min="0" required />
 								</div>
 							</div>
 							
 							<div class="form-group">
 								<label class="control-label col-sm-6" for="DownPayment">Down Payment:</label>
 								<div class="col-sm-6">
-									<input id="DownPayment" ng-model="downpayment" ng-change="myonchange()" type="number" min="0" required />
+									<input id="DownPayment" ng-model="downpayment" type="number" min="0" required />
 								</div>
 							</div>
 							
 							<div class="form-group">
 								<label class="control-label col-sm-6" for="TermLength">Loan Term (Years):</label>
 								<div class="col-sm-6">
-									<input id="TermLength" ng-model="loanterm" ng-change="myonchange()" type="radio" ng-value="30">30</input>
-									<input id="TermLength" ng-model="loanterm" ng-change="myonchange()" type="radio" ng-value="25">25</input>
-									<input id="TermLength" ng-model="loanterm" ng-change="myonchange()" type="radio" ng-value="20">20</input>
-									<input id="TermLength" ng-model="loanterm" ng-change="myonchange()" type="radio" ng-value="15">15</input>
-									<input id="TermLength" ng-model="loanterm" ng-change="myonchange()" type="radio" ng-value="10">10</input>
+									<input id="TermLength" ng-model="loanterm" type="radio" ng-value="30">30</input>
+									<input id="TermLength" ng-model="loanterm" type="radio" ng-value="25">25</input>
+									<input id="TermLength" ng-model="loanterm" type="radio" ng-value="20">20</input>
+									<input id="TermLength" ng-model="loanterm" type="radio" ng-value="15">15</input>
+									<input id="TermLength" ng-model="loanterm" type="radio" ng-value="10">10</input>
 								</div>
 							</div>
 							
 							<div class="form-group">
 								<label class="control-label col-sm-6" for="InterestRate">Interest Rate (APR):</label>
 								<div class="col-sm-6">
-									<input id="InterestRate" ng-model="interestrate" ng-change="myonchange()" type="range" min="0.02" max="0.15" step="0.001" />
+									<input id="InterestRate" ng-model="interestrate" type="range" min="0.02" max="0.15" step="0.001" />
 									<span ng-bind="interestrate * 100 | number:1"></span><span>%</span>
 								</div>
 							</div>
@@ -80,7 +79,68 @@
 							<div class="form-group">
 								<label class="control-label col-sm-6" for="Taxes">Property Taxes (Yearly):</label>
 								<div class="col-sm-6">
-									<input id="Taxes" ng-model="taxes" ng-change="myonchange()" type="number" min="0" />
+									<input id="Taxes" ng-model="taxes" type="number" min="0" />
+								</div>
+							</div>
+							
+							<div class="text-divider-container form-group">
+								<hr class="text-divider" />
+								<h3 class="divider-text">Inspections</h3>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="Building">General Building:</label>
+								<div class="col-sm-6">
+									<input id="Building" ng-model="building" type="checkbox" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="Sewage">Sewage Disposal:</label>
+								<div class="col-sm-6">
+									<input id="Sewage" ng-model="sewage" type="checkbox" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="WaterInsp">Water Quality:</label>
+								<div class="col-sm-6">
+									<input id="WaterInsp" ng-model="waterinsp" type="checkbox" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="RadonAir">Radon Air Quality:</label>
+								<div class="col-sm-6">
+									<input id="RadonAir" ng-model="radonair" type="checkbox" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="RadonWater">Radon Water Quality:</label>
+								<div class="col-sm-6">
+									<input id="RadonWater" ng-model="radonwater" type="checkbox" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="LeadPaint">Lead Based Paint:</label>
+								<div class="col-sm-6">
+									<input id="LeadPaint" ng-model="leadpaint" type="checkbox" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="Pests">Pests:</label>
+								<div class="col-sm-6">
+									<input id="Pests" ng-model="pests" type="checkbox" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="HazardousWaste">Hazardous Waste:</label>
+								<div class="col-sm-6">
+									<input id="HazardousWaste" ng-model="waste" type="checkbox" />
 								</div>
 							</div>
 							
@@ -99,44 +159,9 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="Settlement">Settlement Fee:</label>
+								<label class="control-label col-sm-6" for="TitleInsurance">Title Insurance (Optional):</label>
 								<div class="col-sm-6">
-									<input id="Settlement" ng-model="settlement" ng-change="myonchange()" type="number" min="0" />
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="control-label col-sm-6" for="LenderTitle">Lender Title Insurance:</label>
-								<div class="col-sm-6">
-									<input id="LenterTitle" ng-model="lendertitle" ng-change="myonchange()" type="number" min="0" />
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="control-label col-sm-6" for="RecordingDeed">Deed Recordation Fee:</label>
-								<div class="col-sm-6">
-									<input id="RecordingDeed" ng-model="deed" ng-change="myonchange()" type="number" min="0" />
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="control-label col-sm-6" for="RecordingMortgage">Mortgage Recordation Fee:</label>
-								<div class="col-sm-6">
-									<input id="RecordingMortgage" ng-model="mortgage" ng-change="myonchange()" type="number" min="0" />
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="control-label col-sm-6" for="TransferTax">Transfer Tax:</label>
-								<div class="col-sm-6">
-									<input id="TransferTax" ng-model="transfertax" ng-change="myonchange()" type="number" min="0" />
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label class="control-label col-sm-6" for="TitleInsurance">Title Insurance:</label>
-								<div class="col-sm-6">
-									<input id="TitleInsurance" ng-model="titleinsurance" ng-change="myonchange()" type="number" min="0" />
+									<input id="TitleInsurance" ng-model="titleinsurance" type="number" min="0" />
 								</div>
 							</div>
 							
@@ -155,44 +180,44 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="HomeInsurance">Home Insurance:</label>
+								<label class="control-label col-sm-6" for="HomeInsurance">Home Insurance (Yearly):</label>
 								<div class="col-sm-6">
-									<input id="HomeInsurance" ng-model="insurance" ng-change="myonchange()" type="number" min="0" />
+									<input id="HomeInsurance" ng-model="insurance" type="number" min="0" />
 								</div>
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="Heat">Heating:</label>
+								<label class="control-label col-sm-6" for="Heat">Heating (Yearly):</label>
 								<div class="col-sm-6">
-									<input id="Heat" ng-model="heat" ng-change="myonchange()" type="number" min="0" />
+									<input id="Heat" ng-model="heat" type="number" min="0" />
 								</div>
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="Electricity">Electric:</label>
+								<label class="control-label col-sm-6" for="Electricity">Electric (Yearly):</label>
 								<div class="col-sm-6">
-									<input id="Electricity" ng-model="electric" ng-change="myonchange()" type="number" min="0" />
+									<input id="Electricity" ng-model="electric" type="number" min="0" />
 								</div>
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="Water">Water:</label>
+								<label class="control-label col-sm-6" for="Water">Water (Yearly):</label>
 								<div class="col-sm-6">
-									<input id="Water" ng-model="water" ng-change="myonchange()" type="number" min="0" />
+									<input id="Water" ng-model="water" type="number" min="0" />
 								</div>
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="Wifi">Internet/Wifi:</label>
+								<label class="control-label col-sm-6" for="Wifi">Internet/Wifi (Yearly):</label>
 								<div class="col-sm-6">
-									<input id="Wifi" ng-model="wifi" ng-change="myonchange()" type="number" min="0" />
+									<input id="Wifi" ng-model="wifi" type="number" min="0" />
 								</div>
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="Maintenance">Maintenance Savings:</label>
+								<label class="control-label col-sm-6" for="Maintenance">Maintenance Savings (Yearly):</label>
 								<div class="col-sm-6">
-									<input id="Maintenance" ng-model="maintenance" ng-change="myonchange()" type="number" min="0" />
+									<input id="Maintenance" ng-model="maintenance" type="number" min="0" />
 								</div>
 							</div>
 							
@@ -204,14 +229,14 @@
 							<div class="form-group">
 								<label class="control-label col-sm-6" for="SalvageValue">Resell Price:</label>
 								<div class="col-sm-6">
-									<input id="SalvageValue" ng-model="salvage" ng-change="myonchange()" type="number" min="0" />
+									<input id="SalvageValue" ng-model="salvage" type="number" min="0" />
 								</div>
 							</div>
 							
 							<div class="form-group">
 								<label class="control-label col-sm-6" for="DiscountRate">Discount Rate:</label>
 								<div class="col-sm-6">
-									<input id="DiscountRate" ng-model="discountrate" ng-change="myonchange()" type="range" min="0" max="0.15" step="0.001" />
+									<input id="DiscountRate" ng-model="discountrate" type="range" min="0" max="0.15" step="0.001" />
 									<span ng-bind="discountrate * 100 | number:1"></span><span>%</span>
 								</div>
 							</div>
@@ -236,7 +261,7 @@
 							<p><a href="https://linktr.ee/SoldbyComeau">https://linktr.ee/SoldbyComeau</a></p>
 							<p>265 S River Road</p>
 							<p>Bedford, NH 03110</p>
-							<p>mobile: (603) 370-7806 | office: (888) 888-SOLD</p>
+							<p>m: (603) 370-7806 | o: (888) 888-SOLD</p>
 						</div>
 					</div>
 				</div>
@@ -247,15 +272,6 @@
 					<!-- title -->
 					<div class="panel-heading">
 						<h2>Home Purchase Calculator</h2>
-						<!-- navigation buttons -->
-						<div id="ResultsButtons">
-							<button ng-click="toggleresults()" class="btn" title="Edit">
-								<span class="glyphicon glyphicon-edit" />
-							</button>
-							<button onclick="window.print()" class="btn" title="Save">
-								<span class="glyphicon glyphicon-save" />
-							</button>
-						</div>
 						
 						<!-- snapshot -->
 						<table id="SnapshotTable">
@@ -281,7 +297,13 @@
 							</tr>
 						</table>
 						
-						<!-- credits -->
+						<!-- navigation buttons -->
+						<div id="ResultsButtons">
+							<button ng-click="toggleresults()" class="btn" title="Edit">Edit</button>
+							<button onclick="window.print()" class="btn" title="Save">Save</button>
+						</div>
+						
+						<!-- credits
 						<div>
 							<img src="goldbg.jpeg" style="float:left; width: 120px; margin-right: 10px;" />
 							<h3>Mark Comeau</h3>
@@ -290,7 +312,7 @@
 							<p>265 S River Road</p>
 							<p>Bedford, NH 03110</p>
 							<p>mobile: (603) 370-7806 | office: (888) 888-SOLD</p>
-						</div>
+						</div> -->
 					</div>
 					
 					<!-- panel body -->
@@ -300,6 +322,7 @@
 						
 						<!-- results table -->
 						<table ng-model="results" class="table table-striped">
+							<caption><h3>Detailed Breakdown by Year</h3></caption>
 							<tr>
 								<th>Year</th>
 								<th class="fright">Cost</th>
@@ -335,6 +358,8 @@
 								<th class="fright">{{equity*100 | number:2}}%</th>
 							</tr>
 						</table>
+						<!-- disclaimer -->
+						<p id="disclaimer">*Please note, all values are <i>estimates</i> and data presented should only be used as a referance.*</p>
 					</div>
 					<!-- close panel body -->
 					
@@ -347,10 +372,8 @@
 							<p><a href="https://linktr.ee/SoldbyComeau">https://linktr.ee/SoldbyComeau</a></p>
 							<p>265 S River Road</p>
 							<p>Bedford, NH 03110</p>
-							<p>mobile: (603) 370-7806 | office: (888) 888-SOLD</p>
+							<p>m: (603) 370-7806 | o: (888) 888-SOLD</p>
 						</div>
-						<!-- disclaimer -->
-						<p id="disclaimer">*Please note, all values are <i>estimates</i> and data presented should only be used as a referance.*</p>
 					</div>
 				</div>
 				<!-- close results -->

@@ -4,8 +4,9 @@ buildGraphs = function( dataset ){
 	
 	//build a new bar graph
 	var barGraph = document.createElement("CANVAS");
-	barGraph.width = 600;
-	barGraph.height = 400;
+	barGraph.height = 300;
+	var column1 = document.createElement("DIV");
+	column1.classList.add( "col-sm-6" );
 	var barCtx = barGraph.getContext('2d');
 	
 	//variables for bar graph
@@ -44,17 +45,17 @@ buildGraphs = function( dataset ){
 			labels: blabels,
 			datasets: [{
 				label: "Principal",
-				backgroundColor: "rgba(55,55,180,0.7)",
+				backgroundColor: "rgba(55,55,180,0.8)",
 				borderColor:  "rgba(55,55,180,0.7)",
 				data: principals
 			},{
 				label: "Interest",
-				backgroundColor: "rgba(180,55,55,0.7)",
+				backgroundColor: "rgba(180,55,55,0.8)",
 				borderColor:  "rgba(180,55,55,0.7)",
 				data: interests
 			},{
 				label: "Other Costs",
-				backgroundColor: "rgba(55,180,55,0.7)",
+				backgroundColor: "rgba(55,180,55,0.8)",
 				borderColor: "rgba(55,180,55,0.7)",
 				data: remainder
 			}]
@@ -74,33 +75,24 @@ buildGraphs = function( dataset ){
 	});
 	
 	//add the bar graph to the screen
-	$("#chartscontainer").append( barGraph.canvas );
+	column1.append( barGraph.canvas );
+	$("#chartscontainer").append( column1 );
 	
 	//build a new pie chart
 	var pieChart = document.createElement("CANVAS");
-	pieChart.width = 600;
-	pieChart.height = 400;
+	pieChart.height = 300;
+	var column2 = document.createElement("DIV");
+	column2.classList.add( "col-sm-6" );
 	var pieCtx = pieChart.getContext('2d');
 	
-	//color variables
-	pcolors = [
-		"rgba(27, 35, 63, 0.9)",
-		"rgba(80, 146, 173, 0.3)",
-		"rgba(220, 203, 15, 0.3)",
-		"rgba(214, 60, 112, 0.9)",
-		"rgba(72, 55, 141, 0.9)",
-		"rgba(126, 14, 31, 0.5)",
-		"rgba(124, 195, 111, 0.2)",
-		"rgba(64, 123, 206, 0.6)",
-		"rgba(62, 127, 197, 0.8)",
-		"rgba(15, 65, 72, 1)",
-		"rgba(135, 22, 66, 0.4)",
-		"rgba(33, 51, 39, 0.9)",
-		"rgba(177, 171, 10, 0.8)",
-		"rgba(70, 154, 134, 0.3)",
-		"rgba(173, 29, 237, 0.9)",
-		"rgba(33, 241, 151, 0.8)"
-	]
+	//generate random colors
+	pcolors = [];
+	for( var i in pdata ){
+		pcolors.push( "rgba(" + Math.floor(Math.random()*255) 
+			+ "," + Math.floor(Math.random()*255) 
+			+ "," + Math.floor(Math.random()*255) 
+			+ "," + Math.random() + ")" );
+	};
 	
 	//pie chart configuration
 	var pieChart = new Chart( pieCtx, {
@@ -115,11 +107,12 @@ buildGraphs = function( dataset ){
 		options: {
 			plugins: {
 				title: { display: true, text: "Total Cost of Ownership" },
-				legend: { position: "right" }
+				legend: { position: "bottom" }
 			}
 		}
 	});
 	
 	//add the pie chart to the screen
-	$("#chartscontainer").append( pieChart.canvas );
+	column2.append( pieChart.canvas );
+	$("#chartscontainer").append( column2 );
 }
