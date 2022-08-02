@@ -13,9 +13,16 @@ var amortizations = [
 app.controller( "myCtrl", function($scope){
 	//toggle input / results
 	$scope.toggleresults = function(){
+		//scroll to top
+		$( window ).scrollTop( 0 );
+		
+		//toggle visible elements
 		$("#Results").toggle();
 		$("#Input").toggle();
-		$scope.myonchange();
+		
+		//rebuild data if showing results
+		if( $("#Results").style == "display: block;" )
+			$scope.myonchange();
 	}
 	
 	//onchange for all inputs
