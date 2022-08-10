@@ -21,7 +21,7 @@ app.controller( "myCtrl", function($scope){
 		$("#Input").toggle();
 		
 		//rebuild data if showing results
-		if( $("#Results").style == "display: block;" )
+		if( $("#Results").css("display") == "block" )
 			$scope.myonchange();
 	}
 	
