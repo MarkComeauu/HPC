@@ -174,7 +174,7 @@
 								<a href="https://www.sofi.com/cost-of-living-in-new-hampshire/">
 									<p>
 										<span class="glyphicon glyphicon-info-sign"></span>
-										Calculate your operation costs here!
+										Learn more about operation costs here!
 									</p>
 								</a>
 							</div>
@@ -215,7 +215,7 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="control-label col-sm-6" for="Maintenance">Maintenance Savings (Yearly):</label>
+								<label class="control-label col-sm-6" for="Maintenance">Maintenance (Yearly):</label>
 								<div class="col-sm-6">
 									<input id="Maintenance" ng-model="maintenance" type="number" min="0" />
 								</div>
@@ -224,6 +224,71 @@
 							<div class="text-divider-container form-group">
 								<hr class="text-divider" />
 								<h3 class="divider-text">Other</h3>
+							</div>
+							
+							<div class="form-group" style="text-align: center;">
+								<a href="https://www.nerdwallet.com/article/mortgages/tax-deductions-for-homeowners">
+									<p>
+										<span class="glyphicon glyphicon-info-sign"></span>
+										Learn more about tax deductions here!
+									</p>
+								</a>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="IncomeBracket">Income Tax Bracket:</label>
+								<div class="col-sm-6">
+									<table class="table" style="margin-bottom: 0;">
+										<tr>
+											<th></th>
+											<th><input id="TaxFilingRel" ng-model="filingrel" type="radio" ng-value="0">Single Filer</input></th>
+											<th><input id="TaxFilingRel" ng-model="filingrel" type="radio" ng-value="1">Married, Filing Jointly</input></th>
+										</tr>
+										<tr>
+											<td><input id="IncomeBracket" ng-model="taxbracket" type="radio" ng-value="0"></input></td>
+											<td>[$0 – $10,275]</td>
+											<td>[$0 – $20,550]</td>
+										</tr>
+										<tr>
+											<td><input id="IncomeBracket" ng-model="taxbracket" type="radio" ng-value="1"></input></td>
+											<td>[$10,276 – $41,775]</td>
+											<td>[$20,551 – $83,550]</td>
+										</tr>
+										<tr>
+											<td><input id="IncomeBracket" ng-model="taxbracket" type="radio" ng-value="2"></input></td>
+											<td>[$41,776 – $89,075]</td>
+											<td>[$83,551 – $178,150]</td>
+										</tr>
+										<tr>
+											<td><input id="IncomeBracket" ng-model="taxbracket" type="radio" ng-value="3"></input></td>
+											<td>[$89,076 – $170,050]</td>
+											<td>[$178,151 – $340,100]</td>
+										</tr>
+										<tr>
+											<td><input id="IncomeBracket" ng-model="taxbracket" type="radio" ng-value="4"></input></td>
+											<td>[$170,051 – $215,950]</td>
+											<td>[$340,101 – $431,900]</td>
+										</tr>
+										<tr>
+											<td><input id="IncomeBracket" ng-model="taxbracket" type="radio" ng-value="5"></input></td>
+											<td>[$215,951 – $539,900]</td>
+											<td>[$431,901 – $647,850]</td>
+										</tr>
+										<tr>
+											<td><input id="IncomeBracket" ng-model="taxbracket" type="radio" ng-value="6"></input></td>
+											<td>[$539,901+]</td>
+											<td>[$647,851+]</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-6" for="TaxFilingType">Tax Filing Type:</label>
+								<div class="col-sm-6">
+									<input id="TaxFilingType" ng-model="filingtype" type="radio" ng-value="0">Standard Deduction</input>
+									<input id="TaxFilingType" ng-model="filingtype" type="radio" ng-value="1">Itemized Deduction</input>
+								</div>
 							</div>
 							
 							<div class="form-group">
@@ -285,11 +350,15 @@
 							</tr>
 							<tr ng-if="monthlypmt != 0">
 								<td><h4>Loan Terms: </h4></td>
-								<td><h4><i>${{price-downpayment | number:2}}, {{loanterm}} Years, {{interestrate*100}}% APY</i></h4></td>
+								<td><h4><i>${{price-downpayment | number:2}}, {{loanterm}} Years, {{interestrate*100}}% APR</i></h4></td>
 							</tr>
 							<tr ng-if="monthlypmt != 0">
 								<td><h4>Monthly Loan Payment: </h4></td>
 								<td><h4><i>${{monthlypmt | number:2}}</i></h4></td>
+							</tr>
+							<tr>
+								<td><h4>Average Monthly Cost: </h4></td>
+								<td><h4><i>${{ (outputArray[1].subtotal + outputArray[outputArray.length-1].subtotal) / 24 | number:2}}</i></h4></td>
 							</tr>
 							<tr>
 								<td><h4>Cash to Close: </h4></td>
@@ -342,7 +411,9 @@
 								</td>
 								<td class="fright">
 									<ul>
-										<li ng-repeat="cost in x.costs">${{cost.value | number:2}}</li>
+										<li ng-repeat="cost in x.costs">
+											<span ng-if="cost.name == 'Tax Refund'">(</span>${{cost.value | number:2}}<span ng-if="cost.name == 'Tax Refund'">)</span>
+										</li>
 									</ul>
 								</td>
 								<td class="fright">${{x.subtotal | number:2}}</td>
@@ -352,14 +423,18 @@
 							</tr>
 							<!-- final summation -->
 							<tr>
-								<td ng-if="discountrate != 0" colspan="5" style="color:#26c952;text-align:right;">SALE +$<span ng-bind="salvagedisc * 0.94 | number:2" /></td>
-								<td ng-if="discountrate == 0" colspan="4" style="color:#26c952;text-align:right;">SALE +$<span ng-bind="salvagedisc * 0.94 | number:2" /></td>
-								<th class="fright">${{totalcost - salvagedisc * 0.94 | number:2}}</th>
+								<td ng-if="discountrate != 0 && salvage != 0" colspan="5" style="color:#26c952;text-align:right;">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
+								<td ng-if="discountrate == 0 && salvage != 0" colspan="4" style="color:#26c952;text-align:right;">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
+								<th ng-if="salvage != 0" class="fright">${{totalcost - salvagedisc * 0.94 | number:2}}</th>
+								<th ng-if="salvage == 0" colspan="6" class="fright">${{totalcost - salvagedisc * 0.94 | number:2}}</th>
 								<th class="fright">{{equity*100 | number:2}}%</th>
 							</tr>
 						</table>
 						<!-- disclaimer -->
-						<p id="disclaimer">*Please note, all values are <i>estimates</i> and data presented should only be used as a referance.*</p>
+						<div id="disclaimer">
+							<p>NOTE: These are <i>estimates</i>! Due to rounding error and other factors of your specific situation, real costs may differ from what is generated by this calculator.</p>
+							<p>Should you require a more accurate model, please reach out! The creator's contact information can be found below.</p>
+						</div>
 					</div>
 					<!-- close panel body -->
 					

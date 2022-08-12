@@ -1,4 +1,6 @@
 buildGraphs = function( dataset ){
+	//console.log( dataset );
+	
 	//get charts container and clear it
 	$("#chartscontainer").empty();
 	
@@ -26,12 +28,14 @@ buildGraphs = function( dataset ){
 				interests.push( parseFloat( dataset[i].costs[j].value.toFixed(2) ) );
 			
 			//pie chart data
-			if( !plabels.includes( dataset[i].costs[j].name ) ){
-				plabels.push( dataset[i].costs[j].name );
-				pdata.push( parseFloat( dataset[i].costs[j].value.toFixed(2) ) );
-			} else {
-				var ind = plabels.indexOf( dataset[i].costs[j].name );
-				pdata[ind] += parseFloat( dataset[i].costs[j].value.toFixed(2) );
+			if( dataset[i].costs[j].name != "Tax Refund" ){
+				if( !plabels.includes( dataset[i].costs[j].name ) ){
+					plabels.push( dataset[i].costs[j].name );
+					pdata.push( parseFloat( dataset[i].costs[j].value.toFixed(2) ) );
+				} else {
+					var ind = plabels.indexOf( dataset[i].costs[j].name );
+					pdata[ind] += parseFloat( dataset[i].costs[j].value.toFixed(2) );
+				}
 			}
 		}
 		
@@ -45,18 +49,21 @@ buildGraphs = function( dataset ){
 			labels: blabels,
 			datasets: [{
 				label: "Principal",
-				backgroundColor: "rgba(55,55,180,0.8)",
-				borderColor:  "rgba(55,55,180,0.7)",
+				backgroundColor: "rgb(" + Math.floor(Math.random()*255) 
+					+ "," + Math.floor(Math.random()*255) 
+					+ "," + Math.floor(Math.random()*255) + ")",
 				data: principals
 			},{
 				label: "Interest",
-				backgroundColor: "rgba(180,55,55,0.8)",
-				borderColor:  "rgba(180,55,55,0.7)",
+				backgroundColor: "rgb(" + Math.floor(Math.random()*255) 
+					+ "," + Math.floor(Math.random()*255) 
+					+ "," + Math.floor(Math.random()*255) + ")",
 				data: interests
 			},{
 				label: "Other Costs",
-				backgroundColor: "rgba(55,180,55,0.8)",
-				borderColor: "rgba(55,180,55,0.7)",
+				backgroundColor: "rgb(" + Math.floor(Math.random()*255) 
+					+ "," + Math.floor(Math.random()*255) 
+					+ "," + Math.floor(Math.random()*255) + ")",
 				data: remainder
 			}]
 		},

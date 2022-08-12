@@ -9,6 +9,9 @@ var amortizations = [
 	{"length":"15","vals":[0.00001736,0.4391]},
 	{"length":"10","vals":[0.00002949,0.5777]}];
 
+//Federal Income Tax Brackets
+var federalrates = [0.1,0.12,0.22,0.24,0.32,0.35,0.37];
+
 //angular app controler
 app.controller( "myCtrl", function($scope){
 	//toggle input / results
@@ -89,6 +92,24 @@ app.controller( "myCtrl", function($scope){
 				
 				$scope.totalcost += $scope.tempobj.total;
 			} else {
+				//tax refunds
+				var taxdeduction = 0;
+				
+				if( $scope.filingtype == 0 ){ //standard deduction
+					if( $scope.filingrel == 0 )
+						taxdeduction = 12550; //single
+					else
+						taxdeduction = 25100; //married
+				}
+				else{ //itemized deduction
+					if( ( $scope.filingrel == 0 && $scope.taxes < 5000 ) || ( $scope.filingrel == 1 && $scope.taxes < 10000 ) )
+						taxdeduction += $scope.taxes; //single & less than max OR married & less than max
+					else if( $scope.filingrel == 0 )
+						taxdeduction += 5000; //single & more than max
+					else
+						taxdeduction += 10000; //married & more than max
+				}
+				
 				//if financing add loan payments. P = r ( PV / ( 1 - ( 1 + r ) ** -n ) ) -> Monthly Payment
 				if( $scope.price - $scope.downpayment > 0 ){
 					//get monthly loan payment
@@ -110,6 +131,10 @@ app.controller( "myCtrl", function($scope){
 					
 					var interest = $scope.monthlypmt - principal;
 					
+					//if itemized deduction, add interest payments to tax refund
+					if( $scope.filingtype == 1 )
+						taxdeduction += interest*12;
+					
 					//add to the cost list
 					if( principal != 0 )
 						$scope.tempobj.costs.push( {"name":"Loan Principal","value":principal*12} );
@@ -117,8 +142,12 @@ app.controller( "myCtrl", function($scope){
 						$scope.tempobj.costs.push( {"name":"Loan Interest","value":interest*12} );
 					
 					//if private mortgage insurance is required
-					if( $scope.equity < 0.2 )
+					if( $scope.equity < 0.2 ){
 						$scope.tempobj.costs.push( {"name":"PMI","value":$scope.pmi} );
+						//if itemized deduction & AGI < 109k married || 50k single, add pmi payment to tax refund
+						if( $scope.filingtype == 1 && $scope.taxbracket < 3 )
+							taxdeduction += $scope.pmi;
+					}
 				}
 				
 				//add taxes to costs
@@ -139,9 +168,16 @@ app.controller( "myCtrl", function($scope){
 				if( $scope.maintenance != undefined && $scope.maintenance != 0 )
 					$scope.tempobj.costs.push( {"name":"Maintenance","value":$scope.maintenance} );
 				
+				//add tax refund costs (should be a negative value)
+				$scope.tempobj.costs.push( {"name":"Tax Refund","value":taxdeduction * (federalrates[$scope.taxbracket] + 0.05) } );
+				
 				//set subtotal
-				for( j in $scope.tempobj.costs )
-					$scope.tempobj.subtotal += $scope.tempobj.costs[j].value;
+				for( j in $scope.tempobj.costs ){
+					if( $scope.tempobj.costs[j].name == "Tax Refund" )
+						$scope.tempobj.subtotal -= $scope.tempobj.costs[j].value;
+					else
+						$scope.tempobj.subtotal += $scope.tempobj.costs[j].value;
+				}
 				
 				//get the present value of the subtotal
 				if( $scope.discountrate != 0 ){
@@ -189,8 +225,11 @@ app.controller( "myCtrl", function($scope){
 		$scope.water = undefined;
 		$scope.wifi = undefined;
 		$scope.maintenance = undefined;
+		$scope.filingrel = 0;
+		$scope.taxbracket = 0;
+		$scope.filingtype = 0;
 		$scope.salvage = 0;
-		$scope.discountrate = 0.03;
+		$scope.discountrate = 0;
 		
 		$scope.myonchange();
 	}
@@ -216,8 +255,11 @@ app.controller( "myCtrl", function($scope){
 		$scope.water = 0;
 		$scope.wifi = 720;
 		$scope.maintenance = 1200;
+		$scope.filingrel = 0;
+		$scope.taxbracket = 2;
+		$scope.filingtype = 1;
 		$scope.salvage = 500000.00;
-		$scope.discountrate = 0.03;
+		$scope.discountrate = 0;
 		
 		//update
 		$scope.myonchange();

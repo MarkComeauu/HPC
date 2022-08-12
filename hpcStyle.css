@@ -22,6 +22,9 @@ input[type=radio]{
 	width: initial;
 	margin: 10px 5px 0 0;
 }
+#IncomeBracket, #FilingRel{
+	margin: 0;
+}
 input[type=checkbox]{
 	margin-top: 10px;
 	width: initial;
