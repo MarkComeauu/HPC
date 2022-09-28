@@ -18,7 +18,7 @@
 	<!-- open body -->
 	<body>
 		<!-- navigation bar -->
-		<div id="navbar">
+		<div id="navbar" class="container">
 			<img id="logo" src="styling/Icon.png" />
 			<ul>
 				<li><a id="nav-calc" onclick="navigate(this.id)" class="active">Calculator</a></li>
@@ -380,7 +380,7 @@
 					
 					<!-- navigation buttons -->
 					<div id="ResultsButtons">
-						<button ng-click="toggleresults()" class="btn" title="Edit">Edit</button>
+						<button onclick="navigate( 'nav-calc' )" class="btn" title="Edit">Edit</button>
 						<button onclick="window.print()" class="btn" title="Save">Save</button>
 					</div>
 					
