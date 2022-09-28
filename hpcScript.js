@@ -1,3 +1,25 @@
+//Navigation
+function navigate( loc ){
+	if( loc == "nav-calc" && $("#Input").css("display") != "block" ){
+		$("#Input").show();
+		$("#Results").hide();
+		$("#Info").hide();
+	}
+	else if( loc == "nav-res" && $("#Results").css("display") != "block" ){
+		$("#Input").hide();
+		$("#Results").show();
+		$("#Info").hide();
+	}
+	else if( loc == "nav-info" && $("#Info").css("display") != "block" ){
+		$("#Input").hide();
+		$("#Results").hide();
+		$("#Info").show();
+	}
+		
+	$("#navbar .active").removeClass("active");
+	$("#" + loc).addClass("active");
+}
+
 //Angular JS
 var app = angular.module( "myApp", [] );
 
@@ -14,20 +36,6 @@ var federalrates = [0.1,0.12,0.22,0.24,0.32,0.35,0.37];
 
 //angular app controler
 app.controller( "myCtrl", function($scope){
-	//toggle input / results
-	$scope.toggleresults = function(){
-		//scroll to top
-		$( window ).scrollTop( 0 );
-		
-		//toggle visible elements
-		$("#Results").toggle();
-		$("#Input").toggle();
-		
-		//rebuild data if showing results
-		if( $("#Results").css("display") == "block" )
-			$scope.myonchange();
-	}
-	
 	//onchange for all inputs
 	$scope.myonchange = function(){
 		//initialize
@@ -155,18 +163,34 @@ app.controller( "myCtrl", function($scope){
 					$scope.tempobj.costs.push( {"name":"Property Taxes","value":$scope.taxes} );
 				
 				//add operation costs
-				if( $scope.insurance != undefined && $scope.insurance != 0 )
-					$scope.tempobj.costs.push( {"name":"Home Insurance","value":$scope.insurance} );
-				if( $scope.heat != undefined && $scope.heat != 0 )
-					$scope.tempobj.costs.push( {"name":"Heating Costs","value":$scope.heat} );
-				if( $scope.electric != undefined && $scope.electric != 0 )
-					$scope.tempobj.costs.push( {"name":"Electricity","value":$scope.electric} );
-				if( $scope.water != undefined && $scope.water != 0 )
-					$scope.tempobj.costs.push( {"name":"Water","value":$scope.water} );
-				if( $scope.wifi != undefined && $scope.wifi != 0 )
-					$scope.tempobj.costs.push( {"name":"Internet / Wifi","value":$scope.wifi} );
-				if( $scope.maintenance != undefined && $scope.maintenance != 0 )
-					$scope.tempobj.costs.push( {"name":"Maintenance","value":$scope.maintenance} );
+				if( $scope.opcostperiod == 0 ){ //calculated yearly
+					if( $scope.insurance != undefined && $scope.insurance != 0 )
+						$scope.tempobj.costs.push( {"name":"Home Insurance","value":$scope.insurance} );
+					if( $scope.heat != undefined && $scope.heat != 0 )
+						$scope.tempobj.costs.push( {"name":"Heating Costs","value":$scope.heat} );
+					if( $scope.electric != undefined && $scope.electric != 0 )
+						$scope.tempobj.costs.push( {"name":"Electricity","value":$scope.electric} );
+					if( $scope.water != undefined && $scope.water != 0 )
+						$scope.tempobj.costs.push( {"name":"Water","value":$scope.water} );
+					if( $scope.wifi != undefined && $scope.wifi != 0 )
+						$scope.tempobj.costs.push( {"name":"Internet / Wifi","value":$scope.wifi} );
+					if( $scope.maintenance != undefined && $scope.maintenance != 0 )
+						$scope.tempobj.costs.push( {"name":"Maintenance","value":$scope.maintenance} );
+				}
+				else{ //calculated monthly
+					if( $scope.insurance != undefined && $scope.insurance != 0 )
+						$scope.tempobj.costs.push( {"name":"Home Insurance","value":$scope.insurance*12} );
+					if( $scope.heat != undefined && $scope.heat != 0 )
+						$scope.tempobj.costs.push( {"name":"Heating Costs","value":$scope.heat*12} );
+					if( $scope.electric != undefined && $scope.electric != 0 )
+						$scope.tempobj.costs.push( {"name":"Electricity","value":$scope.electric*12} );
+					if( $scope.water != undefined && $scope.water != 0 )
+						$scope.tempobj.costs.push( {"name":"Water","value":$scope.water*12} );
+					if( $scope.wifi != undefined && $scope.wifi != 0 )
+						$scope.tempobj.costs.push( {"name":"Internet / Wifi","value":$scope.wifi*12} );
+					if( $scope.maintenance != undefined && $scope.maintenance != 0 )
+						$scope.tempobj.costs.push( {"name":"Maintenance","value":$scope.maintenance*12} );
+				}
 				
 				//add tax refund costs (should be a negative value)
 				$scope.tempobj.costs.push( {"name":"Tax Refund","value":taxdeduction * (federalrates[$scope.taxbracket] + 0.05) } );
@@ -219,6 +243,7 @@ app.controller( "myCtrl", function($scope){
 		$scope.pests = false;
 		$scope.hazardouswaste = false;
 		$scope.titleinsurance = 0;
+		$scope.opcostperiod = 0;
 		$scope.insurance = undefined;
 		$scope.heat = undefined;
 		$scope.electric = undefined;
@@ -249,6 +274,7 @@ app.controller( "myCtrl", function($scope){
 		$scope.sewage = true;
 		$scope.waterinsp = true;
 		$scope.titleinsurance = 342;
+		$scope.opcostperiod = 0;
 		$scope.insurance = 800;
 		$scope.heat = 1200;
 		$scope.electric = 2250;
