@@ -42,7 +42,8 @@ app.controller( "myCtrl", function($scope){
 		$scope.outputArray = [];
 		$scope.totalcost = 0.0;
 		$scope.equity = $scope.downpayment/$scope.price;
-		$scope.pmi = ($scope.price - $scope.downpayment)*0.01;
+		$scope.loanbalance = $scope.price - $scope.downpayment;
+		$scope.pmi = $scope.loanbalance*0.01;
 		
 		//initialize salvage discounted value & monthly payment
 		$scope.salvagedisc = $scope.salvage*(1/((1 + $scope.discountrate)**$scope.loanterm));
@@ -119,7 +120,7 @@ app.controller( "myCtrl", function($scope){
 				}
 				
 				//if financing add loan payments. P = r ( PV / ( 1 - ( 1 + r ) ** -n ) ) -> Monthly Payment
-				if( $scope.price - $scope.downpayment > 0 ){
+				if( $scope.loanbalance > 0 ){
 					//get monthly loan payment
 					$scope.monthlypmt = ($scope.interestrate/12)*(($scope.price-$scope.downpayment)/(1-(1+($scope.interestrate/12))**-($scope.loanterm*12)));
 					
@@ -163,7 +164,7 @@ app.controller( "myCtrl", function($scope){
 					$scope.tempobj.costs.push( {"name":"Property Taxes","value":$scope.taxes} );
 				
 				//add operation costs
-				if( $scope.opcostperiod == 0 ){ //calculated yearly
+				if( $scope.opcostperiod == 0 ){ //entered yearly
 					if( $scope.insurance != undefined && $scope.insurance != 0 )
 						$scope.tempobj.costs.push( {"name":"Home Insurance","value":$scope.insurance} );
 					if( $scope.heat != undefined && $scope.heat != 0 )
@@ -177,7 +178,7 @@ app.controller( "myCtrl", function($scope){
 					if( $scope.maintenance != undefined && $scope.maintenance != 0 )
 						$scope.tempobj.costs.push( {"name":"Maintenance","value":$scope.maintenance} );
 				}
-				else{ //calculated monthly
+				else{ //entered monthly
 					if( $scope.insurance != undefined && $scope.insurance != 0 )
 						$scope.tempobj.costs.push( {"name":"Home Insurance","value":$scope.insurance*12} );
 					if( $scope.heat != undefined && $scope.heat != 0 )
@@ -204,7 +205,7 @@ app.controller( "myCtrl", function($scope){
 				}
 				
 				//get the present value of the subtotal
-				if( $scope.discountrate != 0 ){
+				if( $scope.discountrate > 0.00 ){
 					//( cost * ( 1 / ( ( 1 + disc ) ** i ) ) ).toFixed(2) -> Present Value
 					$scope.tempobj.disc = ($scope.tempobj.subtotal*(1/((1 + $scope.discountrate)**i))).toFixed(2);
 				
@@ -221,7 +222,7 @@ app.controller( "myCtrl", function($scope){
 			$scope.outputArray.push( $scope.tempobj );
 		}
 		
-		//build the bar graph
+		//build the graphs
 		buildGraphs( $scope.outputArray );
 	}
 	
@@ -291,3 +292,17 @@ app.controller( "myCtrl", function($scope){
 		$scope.myonchange();
 	}
 });
+
+//expansion and retraction for results detail
+function detail( loc ){
+	$( loc ).toggleClass( "glyphicon-chevron-down" );
+	$( loc ).toggleClass( "glyphicon-chevron-up" );
+
+	let costlist = $( loc.parentNode.parentNode.children[1].children[0].children );
+	let amountlist = $( loc.parentNode.parentNode.children[2].children[0].children );
+
+	for( let i = 1; i < costlist.length; i++ ){
+		$( costlist[i] ).toggle();
+		$( amountlist[i] ).toggle();
+	}
+}

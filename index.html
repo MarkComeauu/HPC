@@ -337,7 +337,7 @@
 							<div id="form-button-container">
 								<button ng-click="example()" class="btn btn-info">Example</button>
 								<button ng-click="clearform()" class="btn btn-danger">Reset</button>
-								<button onclick="navigate( 'nav-res' )" class="btn btn-success">Submit</button>
+								<button onclick="navigate( 'nav-res' )" ng-click="myonchange()" class="btn btn-success">Submit</button>
 							</div>
 						</div>
 					</div>
@@ -359,6 +359,10 @@
 						<tr>
 							<td><h4>Purchase Price: </h4></td>
 							<td><h4><i>${{price | number:2}}</i></h4></td>
+						</tr>
+						<tr>
+							<td><h4>Down Payment: </h4></td>
+							<td><h4><i>${{downpayment | number:2}}, {{(downpayment/price)*100 | number:1}}%</i></h4></td>
 						</tr>
 						<tr ng-if="monthlypmt != 0">
 							<td><h4>Loan Terms: </h4></td>
@@ -389,7 +393,7 @@
 					<div id="chartscontainer"></div>
 					
 					<!-- results table -->
-					<table ng-model="results" class="table table-striped">
+					<table id="ResultsTable" ng-model="results" class="table table-striped">
 						<caption><h3>Detailed Breakdown by Year</h3></caption>
 						<tr>
 							<th>Year</th>
@@ -402,10 +406,13 @@
 						</tr>
 						<!-- repeat for years of ownership -->
 						<tr ng-repeat="x in outputArray">
-							<td>{{x.year}}</td>
+							<td>
+								<span>{{x.year}}</span>
+								<span class="glyphicon glyphicon-chevron-up" onclick="detail(this)" style="cursor: pointer;"></span>
+							</td>
 							<td class="fright">
 								<ul>
-									<li ng-repeat="cost in x.costs">{{cost.name}}</li>
+									<li ng-repeat="cost in x.costs" style="white-space: nowrap;">{{cost.name}}</li>
 								</ul>
 							</td>
 							<td class="fright">
@@ -422,8 +429,8 @@
 						</tr>
 						<!-- final summation -->
 						<tr>
-							<td ng-if="discountrate != 0 && salvage != 0" colspan="5" style="color:#26c952;text-align:right;">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
-							<td ng-if="discountrate == 0 && salvage != 0" colspan="4" style="color:#26c952;text-align:right;">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
+							<td ng-if="discountrate != 0 && salvage != 0" colspan="5" style="color:#26c952;" class="fright">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
+							<td ng-if="discountrate == 0 && salvage != 0" colspan="4" style="color:#26c952;" class="fright">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
 							<th ng-if="salvage != 0" class="fright">${{totalcost - salvagedisc * 0.94 | number:2}}</th>
 							<th ng-if="salvage == 0" colspan="6" class="fright">${{totalcost - salvagedisc * 0.94 | number:2}}</th>
 							<th class="fright">{{equity*100 | number:2}}%</th>
