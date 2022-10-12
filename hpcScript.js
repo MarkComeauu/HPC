@@ -23,14 +23,6 @@ function navigate( loc ){
 //Angular JS
 var app = angular.module( "myApp", [] );
 
-//Amortization Formulas
-var amortizations = [
-	{"length":"30","vals":[0.00000622,0.1928]},
-	{"length":"25","vals":[0.00000829,0.2536]},
-	{"length":"20","vals":[0.00001158,0.3337]},
-	{"length":"15","vals":[0.00001736,0.4391]},
-	{"length":"10","vals":[0.00002949,0.5777]}];
-
 //Federal Income Tax Brackets
 var federalrates = [0.1,0.12,0.22,0.24,0.32,0.35,0.37];
 
@@ -47,7 +39,10 @@ app.controller( "myCtrl", function($scope){
 		
 		//initialize salvage discounted value & monthly payment
 		$scope.salvagedisc = $scope.salvage*(1/((1 + $scope.discountrate)**$scope.loanterm));
-		$scope.monthlypmt = 0;
+		//Total Loan Payment = loanbalance * [( i * ( 1 + i ) ** n ) / ( ( 1 + i ) ** n - 1 )]
+		//			i = monthly interest rate, n = number of payments
+		var mir = $scope.interestrate/12;
+		$scope.monthlypmt = $scope.loanbalance * ((mir*[(1+mir)**($scope.loanterm*12)])/((1+mir)**($scope.loanterm*12)-1));
 		
 		//iterate each year
 		for( var i = 0; i < $scope.loanterm + 1; i++ ){
@@ -119,36 +114,33 @@ app.controller( "myCtrl", function($scope){
 						taxdeduction += 10000; //married & more than max
 				}
 				
-				//if financing add loan payments. P = r ( PV / ( 1 - ( 1 + r ) ** -n ) ) -> Monthly Payment
+				//if financing add loan payments.
 				if( $scope.loanbalance > 0 ){
-					//get monthly loan payment
-					$scope.monthlypmt = ($scope.interestrate/12)*(($scope.price-$scope.downpayment)/(1-(1+($scope.interestrate/12))**-($scope.loanterm*12)));
-					
-					var principal;
-					
-					//find appropriate amortization based on loan term
-					for( a in amortizations ){
-						if( amortizations[a].length == $scope.loanterm ){
-							//build function with values: vals[0]*(x-1)**2+vals[1]
-							principal = (amortizations[a].vals[0]*((i*12)-1)**2+amortizations[a].vals[1])*$scope.monthlypmt;
-						}
+					//calculate interest & principal to be paid
+					var interest = 0, principal = 0;
+
+					for( var j = 0; j < 12; j++ ){
+						var int = $scope.loanbalance * mir;
+						var pri = $scope.monthlypmt - int;
+
+						interest += int, principal += pri;
+
+						$scope.loanbalance -= pri;
 					}
-					
+
 					//update equity based on principal paid
-					$scope.tempobj.equity += (principal*12)/$scope.price;
-					$scope.equity += (principal*12)/$scope.price;
-					
-					var interest = $scope.monthlypmt - principal;
-					
+					$scope.tempobj.equity += principal/$scope.price;
+					$scope.equity += principal/$scope.price;
+
 					//if itemized deduction, add interest payments to tax refund
 					if( $scope.filingtype == 1 )
-						taxdeduction += interest*12;
+						taxdeduction += interest;
 					
 					//add to the cost list
 					if( principal != 0 )
-						$scope.tempobj.costs.push( {"name":"Loan Principal","value":principal*12} );
+						$scope.tempobj.costs.push( {"name":"Loan Principal","value":principal} );
 					if( interest != 0 )
-						$scope.tempobj.costs.push( {"name":"Loan Interest","value":interest*12} );
+						$scope.tempobj.costs.push( {"name":"Loan Interest","value":interest} );
 					
 					//if private mortgage insurance is required
 					if( $scope.equity < 0.2 ){
@@ -232,7 +224,7 @@ app.controller( "myCtrl", function($scope){
 		$scope.price = 0;
 		$scope.downpayment = 0;
 		$scope.loanterm = 30;
-		$scope.interestrate = 0.055;
+		$scope.interestrate = 0.065;
 		$scope.monthlypmt = 0;
 		$scope.taxes = 0;
 		$scope.building = false;
@@ -269,7 +261,7 @@ app.controller( "myCtrl", function($scope){
 		$scope.price = 350000.00;
 		$scope.downpayment = 10000.00;
 		$scope.loanterm = 30;
-		$scope.interestrate = 0.055;
+		$scope.interestrate = 0.065;
 		$scope.taxes = 4400;
 		$scope.building = true;
 		$scope.sewage = true;
