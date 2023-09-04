@@ -3,16 +3,25 @@ function navigate( loc ){
 	if( loc == "nav-calc" && $("#Input").css("display") != "block" ){
 		$("#Input").show();
 		$("#Results").hide();
+		$("#Explore").hide();
 		$("#Info").hide();
 	}
 	else if( loc == "nav-res" && $("#Results").css("display") != "block" ){
 		$("#Input").hide();
 		$("#Results").show();
+		$("#Explore").hide();
+		$("#Info").hide();
+	}
+	else if( loc == "nav-exp" && $("#Explore").css("display") != "block" ){
+		$("#Input").hide();
+		$("#Results").hide();
+		$("#Explore").show();
 		$("#Info").hide();
 	}
 	else if( loc == "nav-info" && $("#Info").css("display") != "block" ){
 		$("#Input").hide();
 		$("#Results").hide();
+		$("#Explore").hide();
 		$("#Info").show();
 	}
 		
@@ -20,7 +29,7 @@ function navigate( loc ){
 	$("#" + loc).addClass("active");
 }
 
-//Angular JS
+//Main Calculator angular JS initialization
 var app = angular.module( "myApp", [] );
 
 //Federal Income Tax Brackets
@@ -30,15 +39,42 @@ var federalrates = [0.1,0.12,0.22,0.24,0.32,0.35,0.37];
 app.controller( "myCtrl", function($scope){
 	//onchange for all inputs
 	$scope.myonchange = function(){
-		//initialize
+		//initialize calculator fields
 		$scope.outputArray = [];
 		$scope.totalcost = 0.0;
 		$scope.equity = $scope.downpayment/$scope.price;
 		$scope.loanbalance = $scope.price - $scope.downpayment;
 		$scope.pmi = $scope.loanbalance*0.01;
-		
-		//initialize salvage discounted value & monthly payment
+
+		$scope.submit();
+
+		//initialize explore page fields
+		$scope.exp_price = undefined;
+        $scope.exp_down = 0.05;
+        $scope.exp_loan = 30;
+        $scope.exp_int = 0.05;
+        $scope.exp_pay = 0;
+	}
+
+	$scope.expChange = function(){
+		var arr = explore_data( $scope.exp_price, $scope.exp_down, $scope.exp_loan, $scope.exp_int, $scope.exp_pay );
+		$scope.exp_MTG = arr[0];
+		$scope.exp_total_interest = arr[1];
+		$scope.exp_total_cost = arr[2];
+	}
+
+	//submit
+	$scope.submit = function(){
+		//initialize calculator fields
+		$scope.outputArray = [];
+		$scope.totalcost = 0.0;
+		$scope.equity = $scope.downpayment/$scope.price;
+		$scope.loanbalance = $scope.price - $scope.downpayment;
+		$scope.pmi = $scope.loanbalance*0.01;
+
+		//calculate salvage discounted value & monthly payment
 		$scope.salvagedisc = $scope.salvage*(1/((1 + $scope.discountrate)**$scope.loanterm));
+
 		//Total Loan Payment = loanbalance * [( i * ( 1 + i ) ** n ) / ( ( 1 + i ) ** n - 1 )]
 		//			i = monthly interest rate, n = number of payments
 		var mir = $scope.interestrate/12;
@@ -47,10 +83,11 @@ app.controller( "myCtrl", function($scope){
 		//iterate each year
 		for( var i = 0; i < $scope.loanterm + 1; i++ ){
 			//initialize
-			$scope.tempobj = {};
-			$scope.tempobj.costs = [];
-			$scope.tempobj.subtotal = 0;
-			$scope.tempobj.equity = $scope.equity;
+			$scope.tempobj = {
+				costs:[],
+				subtotal:0,
+				equity:$scope.equity
+			};
 			
 			//assign the year
 			$scope.tempobj.year = i;
@@ -116,16 +153,40 @@ app.controller( "myCtrl", function($scope){
 				
 				//if financing add loan payments.
 				if( $scope.loanbalance > 0 ){
-					//calculate interest & principal to be paid
+					//initialize yearly interest & principal variable
 					var interest = 0, principal = 0;
 
-					for( var j = 0; j < 12; j++ ){
+					//calculate monthly costs
+					var j = 0;
+					while( j < 12 && $scope.loanbalance > 0 ){
+						//get interest owed  (mir = monthly interest rate)
 						var int = $scope.loanbalance * mir;
+
+						//get principal paid with principal only payment
 						var pri = $scope.monthlypmt - int;
+						if( $scope.principalonly )
+							pri += $scope.principalonly;
 
-						interest += int, principal += pri;
+						//if payment exceeds loan balance
+						if ( $scope.monthlypmt - int > $scope.loanbalance ){
+							//recalculate to get final payment
+							pri = $scope.loanbalance;
 
-						$scope.loanbalance -= pri;
+							//only allow for remaining payment to be made
+							interest += int;
+							principal += pri;
+
+							$scope.loanbalance -= pri;
+							break;
+						} else {
+							//summate for yearly amounts paid
+							interest += int;
+							principal += pri;
+
+							$scope.loanbalance -= pri;
+						}
+						
+						j++;
 					}
 
 					//update equity based on principal paid
@@ -243,6 +304,7 @@ app.controller( "myCtrl", function($scope){
 		$scope.water = undefined;
 		$scope.wifi = undefined;
 		$scope.maintenance = undefined;
+		$scope.principalonly = 0;
 		$scope.filingrel = 0;
 		$scope.taxbracket = 0;
 		$scope.filingtype = 0;
@@ -274,6 +336,7 @@ app.controller( "myCtrl", function($scope){
 		$scope.water = 0;
 		$scope.wifi = 720;
 		$scope.maintenance = 1200;
+		$scope.principalonly = 0;
 		$scope.filingrel = 0;
 		$scope.taxbracket = 2;
 		$scope.filingtype = 1;
@@ -285,7 +348,7 @@ app.controller( "myCtrl", function($scope){
 	}
 });
 
-//expansion and retraction for results detail
+//expansion and retraction for results detailed breakdown by year
 function detail( loc ){
 	$( loc ).toggleClass( "glyphicon-chevron-down" );
 	$( loc ).toggleClass( "glyphicon-chevron-up" );
@@ -296,5 +359,17 @@ function detail( loc ){
 	for( let i = 1; i < costlist.length; i++ ){
 		$( costlist[i] ).toggle();
 		$( amountlist[i] ).toggle();
+	}
+}
+
+//toggleAll expands or retracts all rows in detailed breakdown table
+function toggleAll(){
+	let list = $("#ResultsTable span.glyphicon");
+
+	$( list[0] ).toggleClass( "glyphicon-chevron-down" );
+	$( list[0] ).toggleClass( "glyphicon-chevron-up" );
+
+	for( let i = 1; i < list.length; i++ ){
+		detail( list[i] );
 	}
 }

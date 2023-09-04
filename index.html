@@ -7,28 +7,35 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+
 		<title>Home Purchase Calculator</title>
+
 		<link rel="icon" href="styling/RegularIcon.png"></link>
 		<link rel="stylesheet" href="styling/hpcStyle.css"></link>
+
 		<script src="chartScript.js"></script>
 		<script src="hpcScript.js"></script>
+		<script src="exploreScript.js"></script>
 	</head>
 	<!-- close header -->
 	<!-- open body -->
 	<body>
 		<!-- navigation bar -->
-		<div id="navbar" class="container">
+		<div id="navbar">
 			<img id="logo" src="styling/Icon.png" />
 			<ul>
 				<li><a id="nav-calc" onclick="navigate(this.id)" class="active">Calculator</a></li>
 				<li><a id="nav-res" onclick="navigate(this.id)">Results</a></li>
+				<li><a id="nav-exp" onclick="navigate(this.id)">Explore</a></li>
 				<li><a id="nav-info" onclick="navigate(this.id)">Info</a></li>
 			</ul>
 		</div>
 
 		<!-- main container -->
-		<div id="main-container" class="container">
+		<div id="main-container">
 			<!-- angular -->
 			<div id="input-form" ng-app="myApp" ng-controller="myCtrl">
 				<!-- input -->
@@ -270,6 +277,17 @@
 						<div class="text-divider-container form-group">
 							<h3 class="divider-text">Other</h3>
 						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-6" for="PrincipalOnly">Principal Only Payment:</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<span class="input-group-addon">$</span>
+									<input id="PrincipalOnly" class="form-control" ng-model="principalonly" type="number" min="1" />
+									<span class="input-group-addon">Monthly</span>
+								</div>
+							</div>
+						</div>
 						
 						<div class="form-group">
 							<label class="control-label col-sm-6" for="FilingStatus">Tax Filing Status:</label>
@@ -337,7 +355,7 @@
 							<div id="form-button-container">
 								<button ng-click="example()" class="btn btn-info">Example</button>
 								<button ng-click="clearform()" class="btn btn-danger">Reset</button>
-								<button onclick="navigate( 'nav-res' )" ng-click="myonchange()" class="btn btn-success">Submit</button>
+								<button onclick="navigate( 'nav-res' )" ng-click="submit()" class="btn btn-success">Submit</button>
 							</div>
 						</div>
 					</div>
@@ -345,7 +363,7 @@
 				</div>
 				<!-- close input -->
 				
-				<!-- async results -->
+				<!-- results page -->
 				<div id="Results" style="display: none;">
 					<!-- title -->
 					<h2>Results</h2>
@@ -388,7 +406,6 @@
 						<button onclick="window.print()" class="btn" title="Save">Save</button>
 					</div>
 					
-					<!-- panel body -->
 					<!-- charts -->
 					<div id="chartscontainer"></div>
 					
@@ -396,7 +413,9 @@
 					<table id="ResultsTable" ng-model="results" class="table table-striped">
 						<caption><h3>Detailed Breakdown by Year</h3></caption>
 						<tr>
-							<th>Year</th>
+							<th>Year 
+								<span class="glyphicon glyphicon-chevron-down" onclick="toggleAll()" style="cursor: pointer;"></span>
+							</th>
 							<th class="fright">Cost</th>
 							<th class="fright">Amount</th>
 							<th class="fright">Subtotal</th>
@@ -418,7 +437,9 @@
 							<td class="fright">
 								<ul>
 									<li ng-repeat="cost in x.costs">
-										<span ng-if="cost.name == 'Tax Refund'">(</span>${{cost.value | number:2}}<span ng-if="cost.name == 'Tax Refund'">)</span>
+										<span ng-if="cost.name == 'Tax Refund'">(</span>
+										${{cost.value | number:2}}
+										<span ng-if="cost.name == 'Tax Refund'">)</span>
 									</li>
 								</ul>
 							</td>
@@ -428,11 +449,26 @@
 							<td class="fright">{{x.equity*100 | number:2}}%</td>
 						</tr>
 						<!-- final summation -->
-						<tr>
-							<td ng-if="discountrate != 0 && salvage != 0" colspan="5" style="color:#26c952;" class="fright">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
-							<td ng-if="discountrate == 0 && salvage != 0" colspan="4" style="color:#26c952;" class="fright">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
-							<th ng-if="salvage != 0" class="fright">${{totalcost - salvagedisc * 0.94 | number:2}}</th>
-							<th ng-if="salvage == 0" colspan="6" class="fright">${{totalcost - salvagedisc * 0.94 | number:2}}</th>
+						<!-- Yes discount, Yes salvage -->
+						<tr ng-if="discountrate != 0 && salvage != 0">
+							<td colspan="5" style="color:#26c952;" class="fright">Home Sale ($<span ng-bind="salvagedisc * 0.94 | number:2"></span>)</td>
+							<th class="fright">${{totalcost - salvage * 0.94 | number:2}}</th>
+							<th class="fright">{{equity*100 | number:2}}%</th>
+						</tr>
+						<!-- No discount, Yes salvage -->
+						<tr ng-if="discountrate == 0 && salvage != 0">
+							<td colspan="4" style="color:#26c952;" class="fright">Home Sale ($<span ng-bind="salvage * 0.94 | number:2"></span>)</td>
+							<th class="fright">${{totalcost - salvage * 0.94 | number:2}}</th>
+							<th class="fright">{{equity*100 | number:2}}%</th>
+						</tr>
+						<!-- Yes discount, No salvage -->
+						<tr ng-if="discountrate != 0 && salvage == 0">
+							<th colspan="6" class="fright">${{totalcost | number:2}}</th>
+							<th class="fright">{{equity*100 | number:2}}%</th>
+						</tr>
+						<!-- No discount, No salvage -->
+						<tr ng-if="discountrate == 0 && salvage == 0">
+							<th colspan="5" class="fright">${{totalcost | number:2}}</th>
 							<th class="fright">{{equity*100 | number:2}}%</th>
 						</tr>
 					</table>
@@ -443,8 +479,94 @@
 					<!-- close panel body -->
 				</div>
 				<!-- close results -->
+
+				<!-- explore page -->
+				<div id="Explore" style="display: none;">
+					<h2>Explore</h2>
+
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label class="control-label col-sm-6" for="Exp_price">Price:</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<span class="input-group-addon">$</span>
+									<input id="Exp_price" class="form-control" ng-model="exp_price" ng-change="expChange()" type="number" min="0.00" step="1000" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-6" for="Exp_down">Down Payment:</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<input id="Exp_down" class="form-control" ng-model="exp_down" ng-change="expChange()" type="range" min="0.00" max="1" step="0.001" />
+									<span class="input-group-addon glyphicon glyphicon-chevron-left" ng-click="exp_down = exp_down - 0.001; expChange()" style="top: 0;"></span>
+									<span class="input-group-addon">{{ exp_down * 100 | number:1 }}%</span>
+									<span class="input-group-addon glyphicon glyphicon-chevron-right" ng-click="exp_down = exp_down + 0.001; expChange()" style="top: 0;"></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-6" for="Exp_loan">Loan Term:</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<input id="Exp_loan" class="form-control" ng-model="exp_loan" ng-change="expChange()" type="range" min="5" max="40" step="5" />
+									<span class="input-group-addon glyphicon glyphicon-chevron-left" ng-click="exp_loan = exp_loan - 5; expChange()" style="top: 0;"></span>
+									<span class="input-group-addon">{{ exp_loan }} Years</span>
+									<span class="input-group-addon glyphicon glyphicon-chevron-right" ng-click="exp_loan = exp_loan + 5; expChange()" style="top: 0;"></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-6" for="Exp_int">Interest Rate:</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<input id="Exp_int" class="form-control" ng-model="exp_int" ng-change="expChange()" type="range" min="0.01" max="0.25" step="0.001" />
+									<span class="input-group-addon glyphicon glyphicon-chevron-left" ng-click="exp_int = exp_int - 0.001; expChange()" style="top: 0;"></span>
+									<span class="input-group-addon">{{ exp_int * 100 | number:1 }}%</span>
+									<span class="input-group-addon glyphicon glyphicon-chevron-right" ng-click="exp_int = exp_int + 0.001; expChange()" style="top: 0;"></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-6" for="Exp_pay">Principal Only Payment:</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<input id="Exp_pay" class="form-control" ng-model="exp_pay" ng-change="expChange()" type="range" min="0" max="1000" step="10" />
+									<span class="input-group-addon glyphicon glyphicon-chevron-left" ng-click="exp_pay = exp_pay - 10; expChange()" style="top: 0;"></span>
+									<span class="input-group-addon">${{ exp_pay | number:1 }} / mo.</span>
+									<span class="input-group-addon glyphicon glyphicon-chevron-right" ng-click="exp_pay = exp_pay + 10; expChange()" style="top: 0;"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="ExpSnapshot">
+						<table style="width: 100%;">
+							<tr>
+								<th>Down Payment</th>
+								<th>Monthly Mortgage</th>
+								<th>Total Interest Paid</th>
+								<th>Total Cost</th>
+							</tr>
+							<tr>
+								<td>${{ exp_down * exp_price | number: 2 }}</td>
+								<td>${{ exp_MTG | number: 2 }}</td>
+								<td>${{ exp_total_interest | number: 2 }}</td>
+								<td>${{ exp_total_cost | number: 2 }}</td>
+							</tr>
+						</table>
+					</div>
+
+					<div id="ExploreCharts"></div>
+				</div>
+				<!-- close explore page -->
 			</div>
 			<!-- close angular -->
+			
 			<!-- info page -->
 			<div id="Info" style="display: none;">
 				<h2>Info</h2>

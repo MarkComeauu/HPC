@@ -28,18 +28,22 @@ buildGraphs = function( dataset ){
 				interests.push( parseFloat( dataset[i].costs[j].value.toFixed(2) ) );
 			
 			//pie chart data
-			if( dataset[i].costs[j].name != "Tax Refund" ){
+			if( dataset[i].costs[j].name != "Tax Refund" && dataset[i].costs[j].value > 1000 ){		
 				if( !plabels.includes( dataset[i].costs[j].name ) ){
 					plabels.push( dataset[i].costs[j].name );
 					pdata.push( parseFloat( dataset[i].costs[j].value.toFixed(2) ) );
-				} else {
+				}
+				else {
 					var ind = plabels.indexOf( dataset[i].costs[j].name );
 					pdata[ind] += parseFloat( dataset[i].costs[j].value.toFixed(2) );
 				}
 			}
 		}
 		
-		remainder.push( parseFloat( (dataset[i].subtotal - principals[i] - interests[i]).toFixed(2) ) );
+		if( i < principals.length )
+			remainder.push( parseFloat( (dataset[i].subtotal - principals[i] - interests[i]).toFixed(2) ) );
+		else
+			remainder.push( dataset[i].subtotal );
 	}
 	
 	//bar graph configuration
@@ -48,22 +52,19 @@ buildGraphs = function( dataset ){
 		data: {
 			labels: blabels,
 			datasets: [{
+                type: 'bar',
 				label: "Principal",
-				backgroundColor: "rgb(" + Math.floor(Math.random()*255) 
-					+ "," + Math.floor(Math.random()*255) 
-					+ "," + Math.floor(Math.random()*255) + ")",
+				backgroundColor: "rgba(105, 233, 138, 0.8)",
 				data: principals
 			},{
+                type: 'bar',
 				label: "Interest",
-				backgroundColor: "rgb(" + Math.floor(Math.random()*255) 
-					+ "," + Math.floor(Math.random()*255) 
-					+ "," + Math.floor(Math.random()*255) + ")",
+				backgroundColor: "rgba(227, 37, 37, 0.8)",
 				data: interests
 			},{
+                type: 'bar',
 				label: "Other Costs",
-				backgroundColor: "rgb(" + Math.floor(Math.random()*255) 
-					+ "," + Math.floor(Math.random()*255) 
-					+ "," + Math.floor(Math.random()*255) + ")",
+				backgroundColor: "rgba(43, 177, 248, 0.8)",
 				data: remainder
 			}]
 		},
@@ -92,14 +93,17 @@ buildGraphs = function( dataset ){
 	column2.classList.add( "col-sm-6" );
 	var pieCtx = pieChart.getContext('2d');
 	
-	//generate random colors
-	pcolors = [];
-	for( var i in pdata ){
-		pcolors.push( "rgba(" + Math.floor(Math.random()*255) 
-			+ "," + Math.floor(Math.random()*255) 
-			+ "," + Math.floor(Math.random()*255) 
-			+ "," + Math.random() + ")" );
-	};
+	//color for pie graph
+	pcolors = [
+		"rgba(51,34,136,0.8)",
+		"rgba(17,119,51,0.8)",
+		"rgba(68,170,153,0.8)",
+		"rgba(136,204,238,0.8)",
+		"rgba(221,204,119,0.8)",
+		"rgba(204,102,119,0.8)",
+		"rgba(170,68,153,0.8)",
+		"rgba(136,34,85,0.8)"
+	];
 	
 	//pie chart configuration
 	var pieChart = new Chart( pieCtx, {
