@@ -54,13 +54,55 @@ app.controller( "myCtrl", function($scope){
         $scope.exp_loan = 30;
         $scope.exp_int = 0.05;
         $scope.exp_pay = 0;
+		$scope.comparables = [];
 	}
 
+	//explore page change
 	$scope.expChange = function(){
-		var arr = explore_data( $scope.exp_price, $scope.exp_down, $scope.exp_loan, $scope.exp_int, $scope.exp_pay );
+		var arr = explore_data( $scope.exp_name, $scope.exp_price, $scope.exp_down, $scope.exp_loan, $scope.exp_int, $scope.exp_pay );
 		$scope.exp_MTG = arr[0];
 		$scope.exp_total_interest = arr[1];
 		$scope.exp_total_cost = arr[2];
+	}
+
+	//explore page load comparables
+	$scope.expLoadComps = function(){
+		if( localStorage.getItem("Comps") == null )
+			console.log( "no comps saved" );
+		else{
+			$scope.comparables = [];
+			for( let i = 0; i < JSON.parse( localStorage.getItem("Comps") ).length; i++ ){
+				$scope.comparables.push( JSON.parse( localStorage.getItem("Comps") )[i] );
+			}
+		}
+	}
+
+	//explore page save comparables
+	$scope.expSaveComps = function(){
+		//ensure to from storage
+		$scope.expLoadComps();
+
+		//push the new object to array
+		$scope.comparables.push( {
+			"name": $scope.exp_name,
+			"price": $scope.exp_price,
+			"downpct": $scope.exp_down,
+			"downval": $scope.exp_price * $scope.exp_down,
+			"term": $scope.exp_loan,
+			"rate": $scope.exp_int,
+			"extrapmt": $scope.exp_pay,
+			"mtgpmt": $scope.exp_MTG,
+			"totalint": $scope.exp_total_interest,
+			"grandtotal": $scope.exp_total_cost
+		} );
+
+		//save to local storage
+		localStorage.setItem( "Comps", JSON.stringify( $scope.comparables ) );
+	}
+
+	//explore compare function
+	$scope.expComp = function(){
+
 	}
 
 	//submit

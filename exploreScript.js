@@ -1,5 +1,8 @@
+//globla variables
+var EXP_CBY_CHART;
+
 //main function
-explore_data = function( price, down, term, rate, pay ){
+explore_data = function( name, price, down, term, rate, pay ){
     //console.log( price, down, term, rate, pay )
 
     //initialize variables
@@ -84,21 +87,25 @@ explore_data = function( price, down, term, rate, pay ){
         results.push( tempobj );
     }
 
-    //console.log( results );
-    expChart( results );
+    //create the chart if it doesn't exist, otherwise update the data
+    if( $("#ExploreCharts").children().length == 0 )
+        expCreateChart( results );
+    else
+        expUpdateChart( results );
 
     return [mtg, exp_total_interest, exp_total_cost];
 }
 
 //create chart
-expChart = function( dataset ){
+expCreateChart = function( dataset ){
     $("#ExploreCharts").empty();
 
     //build a new bar graph
-	var graph = document.createElement("CANVAS");
-	graph.height = 150;
+	var canvas = document.createElement("CANVAS");
+	canvas.height = 150;
+    canvas.id = "Exp_CBY_Canvas";
 	var container = document.createElement("DIV");
-	var graphCtx = graph.getContext('2d');
+	var graphCtx = canvas.getContext('2d');
 
     //variables for bar graph
 	var blabels = [], principals = [0], interests = [0], equities = [], remainder = [];
@@ -124,7 +131,7 @@ expChart = function( dataset ){
 	}
 	
 	//bar graph configuration
-	var graph = new Chart( graphCtx, {
+	EXP_CBY_CHART = new Chart( graphCtx, {
 		data: {
 			labels: blabels,
 			datasets: [{
@@ -149,7 +156,7 @@ expChart = function( dataset ){
                 yAxisID: 'B',
                 type: 'line',
                 label: "Equity",
-                backgroundColor: "rgba(55, 55, 55, 0.8)",
+                backgroundColor: "rgba(55, 55, 55, 0.9)",
                 data: equities
             }]
 		},
@@ -180,6 +187,44 @@ expChart = function( dataset ){
 	});
 	
 	//add the bar graph to the screen
-	container.append( graph.canvas );
+	container.append( EXP_CBY_CHART.canvas );
 	$("#ExploreCharts").append( container );
+}
+
+//update chart
+expUpdateChart = function( newdataset ){
+    //remove old data
+    while( EXP_CBY_CHART.data.labels.length > 0 ){
+        EXP_CBY_CHART.data.labels.pop();
+    }
+
+    EXP_CBY_CHART.data.datasets.forEach((dataset) => {
+        dataset.data = [];
+    });
+
+    EXP_CBY_CHART.data.datasets[0].data.push( 0 );
+    EXP_CBY_CHART.data.datasets[1].data.push( 0 );
+	
+	//retrieve data
+	for( var i = 0; i < newdataset.length; i++ ){
+        //create yearly labels
+		EXP_CBY_CHART.data.labels.push( "Year " + i );
+		
+        //iterate through costs
+		for( var j = 0; j < newdataset[i].costs.length; j++ ){
+			//get graph data
+			if( newdataset[i].costs[j].name == "Principal" )
+				EXP_CBY_CHART.data.datasets[0].data.push( parseFloat( newdataset[i].costs[j].value.toFixed(2) ) );
+			else if( newdataset[i].costs[j].name == "Interest" )
+                EXP_CBY_CHART.data.datasets[1].data.push( parseFloat( newdataset[i].costs[j].value.toFixed(2) ) );
+            else
+                EXP_CBY_CHART.data.datasets[2].data.push( parseFloat( (newdataset[i].total - EXP_CBY_CHART.data.datasets[0].data[i] - EXP_CBY_CHART.data.datasets[1].data[i]).toFixed(2) ) )
+		}
+
+        //get equity data
+        EXP_CBY_CHART.data.datasets[3].data.push( newdataset[i].equity );
+	}
+
+    //update the chart
+    EXP_CBY_CHART.update();
 }
