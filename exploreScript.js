@@ -98,8 +98,6 @@ explore_data = function( name, price, down, term, rate, pay ){
 
 //create chart
 expCreateChart = function( dataset ){
-    $("#ExploreCharts").empty();
-
     //build a new bar graph
 	var canvas = document.createElement("CANVAS");
 	canvas.height = 150;

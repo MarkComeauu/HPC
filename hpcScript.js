@@ -1,3 +1,8 @@
+//on page load
+$( document ).ready( function(){
+	
+});
+
 //Navigation
 function navigate( loc ){
 	if( loc == "nav-calc" && $("#Input").css("display") != "block" ){
@@ -55,7 +60,13 @@ app.controller( "myCtrl", function($scope){
         $scope.exp_int = 0.05;
         $scope.exp_pay = 0;
 		$scope.comparables = [];
+
+		//load comps from local stroage
+		$scope.expLoadComps();
 	}
+
+	//create blank chart
+	expCreateChart( [] );
 
 	//explore page change
 	$scope.expChange = function(){
@@ -79,7 +90,7 @@ app.controller( "myCtrl", function($scope){
 
 	//explore page save comparables
 	$scope.expSaveComps = function(){
-		//ensure to from storage
+		//ensure to load from storage
 		$scope.expLoadComps();
 
 		//push the new object to array
@@ -101,8 +112,20 @@ app.controller( "myCtrl", function($scope){
 	}
 
 	//explore compare function
-	$scope.expComp = function(){
+	$scope.expComp = function( name ){
+		//find the comp
+		let comp = $scope.comparables.find( (element) => element.name == name );
 
+		//update angular values
+		$scope.exp_name = comp.name;
+		$scope.exp_price = comp.price;
+		$scope.exp_down = comp.downpct;
+		$scope.exp_loan = comp.term;
+		$scope.exp_int = comp.rate;
+		$scope.exp_pay = comp.extrapmt;
+		$scope.exp_MTG = comp.mtgpmt;
+		$scope.exp_total_interest = comp.totalint;
+		$scope.exp_total_cost = comp.grandtotal;
 	}
 
 	//submit

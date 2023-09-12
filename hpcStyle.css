@@ -1,5 +1,5 @@
 @media print{
-	#Input, #navbar{
+	#Input, #navbar, #ResultsButtons{
 		display: none;
 	}
 	#Results{
@@ -89,4 +89,14 @@ ul{
 
 #Compare{
 	margin-top: 3em;
+}
+
+#chartscontainer canvas{
+	max-width: 450px;
+	max-height: 450px;
+}
+
+#ExploreCharts canvas{
+	max-width: 900px;
+	max-height: 450px;
 }
