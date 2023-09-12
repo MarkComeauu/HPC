@@ -1,5 +1,5 @@
 @media print{
-	#Input, #navbar{
+	#Input, #navbar, #ResultsButtons{
 		display: none;
 	}
 	#Results{
@@ -44,18 +44,12 @@ body{
 #main-container{
 	margin: 0 2em;
 	padding: 4em 1em 1em 1em;
-	background-color: rgba(255,255,255,0.85);
-	box-shadow: 5px 5px 10px black;
+	/*background-color: rgba(255,255,255,0.85);
+	box-shadow: 5px 5px 10px black;*/
 }
 
 .fright{
 	text-align: right;
-}
-#form-button-container{
-	text-align: center;
-}
-#form-button-container button{
-	margin: 0 5px;
 }
 
 input[type=radio]{
@@ -87,4 +81,22 @@ ul{
 }
 #SnapshotTable td:nth-child(odd){
 	text-align: right;
+}
+
+.cpointer:hover{
+	cursor: pointer;
+}
+
+#Compare{
+	margin-top: 3em;
+}
+
+#chartscontainer canvas{
+	max-width: 450px;
+	max-height: 450px;
+}
+
+#ExploreCharts canvas{
+	max-width: 900px;
+	max-height: 450px;
 }
