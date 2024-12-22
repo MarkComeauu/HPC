@@ -76,6 +76,22 @@ app.controller( "myCtrl", function($scope){
 		$scope.exp_total_cost = arr[2];
 	}
 
+	//explore page create baseline
+	$scope.expCreateBase = function(){
+		$scope.exp_base_down = $scope.exp_price * $scope.exp_down;
+		
+		var arr = explore_data( $scope.exp_name, $scope.exp_price, $scope.exp_down, $scope.exp_loan, $scope.exp_int, $scope.exp_pay );
+
+		$scope.exp_base_MTG = arr[0] + $scope.exp_pay;
+		$scope.exp_base_interest = arr[1];
+		$scope.exp_base_cost = arr[2];
+
+		$scope.exp_baseline = true;
+	}
+
+	//set default to no baseline
+	$scope.exp_baseline = false;
+
 	//explore page load comparables
 	$scope.expLoadComps = function(){
 		if( localStorage.getItem("Comps") == null )

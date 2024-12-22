@@ -13,8 +13,8 @@
 
 		<title>Home Purchase Calculator</title>
 
-		<link rel="icon" href="styling/RegularIcon.png"></link>
-		<link rel="stylesheet" href="styling/hpcStyle.css"></link>
+		<link rel="icon" href="styling/RegularIcon.png" rel="preload"></link>
+		<link rel="stylesheet" href="styling/hpcStyle.css" rel="preload"></link>
 
 		<script src="chartScript.js"></script>
 		<script src="hpcScript.js"></script>
@@ -30,7 +30,6 @@
 				<li><a id="nav-calc" onclick="navigate(this.id)" class="active">Calculator</a></li>
 				<li><a id="nav-res" onclick="navigate(this.id)">Results</a></li>
 				<li><a id="nav-exp" onclick="navigate(this.id)">Explore</a></li>
-				<li><a id="nav-info" onclick="navigate(this.id)">Info</a></li>
 			</ul>
 		</div>
 
@@ -45,271 +44,281 @@
 					
 					<!-- panel body -->
 					<form>
-						<div class="text-divider-container form-row">
-							<h3 class="divider-text">Basic Information</h3>
-						</div>
-						
-						<div class="form-row">
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="PropertyAddress">Property Address:</label>
-								<input id="PropertyAddress" class="form-control" ng-model="address" type="text" />
-							</div>
-						
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="PurchasePrice">Purchase Price:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="PurchasePrice" class="form-control" ng-model="price" type="number" min="0" required />
-								</div>
-							</div>
-						
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="DownPayment">Down Payment:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="DownPayment" class="form-control" ng-model="downpayment" type="number" min="0" required />
-									<span class="input-group-addon">{{( downpayment / price ) * 100 | number:1}}%</span>
-								</div>
+						<div class="col-lg-6">
+							<div class="text-divider-container form-row">
+								<h3 class="divider-text">Basic Information</h3>
 							</div>
 
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="TermLength">Loan Term:</label>
-								<div class="input-group">
-									<select id="TermLength" class="form-control" ng-model="loanterm">
-										<option ng-model="loanterm" ng-value="30">30</option>
-										<option ng-model="loanterm" ng-value="25">25</option>
-										<option ng-model="loanterm" ng-value="20">20</option>
-										<option ng-model="loanterm" ng-value="15">15</option>
-										<option ng-model="loanterm" ng-value="10">10</option>
+							<div class="form-row">
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="PropertyAddress">Property Address:</label>
+									<input id="PropertyAddress" class="form-control" ng-model="address" type="text" />
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="PurchasePrice">Purchase Price:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="PurchasePrice" class="form-control" ng-model="price" type="number" min="0" required />
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="DownPayment">Down Payment:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="DownPayment" class="form-control" ng-model="downpayment" type="number" min="0" required />
+										<span class="input-group-addon">{{( downpayment / price ) * 100 | number:1}}%</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="TermLength">Loan Term:</label>
+									<div class="input-group">
+										<select id="TermLength" class="form-control" ng-model="loanterm">
+											<option ng-model="loanterm" ng-value="30">30</option>
+											<option ng-model="loanterm" ng-value="25">25</option>
+											<option ng-model="loanterm" ng-value="20">20</option>
+											<option ng-model="loanterm" ng-value="15">15</option>
+											<option ng-model="loanterm" ng-value="10">10</option>
+										</select>
+										<span class="input-group-addon">Years</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="InterestRate">Interest Rate (APR):</label>
+									<div class="input-group">
+										<input id="InterestRate" class="form-control" ng-model="interestrate" type="range" min="0.02" max="0.15" step="0.001" />
+										<span class="input-group-addon">{{interestrate * 100 | number:1}}%</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="Taxes">Property Taxes:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="Taxes" class="form-control" ng-model="taxes" type="number" min="0" />
+										<span class="input-group-addon">Yearly</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="text-divider-container form-row">
+								<h3 class="divider-text">Inspections</h3>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="Building">General Building:</label>
+									<input id="Building" class="form-control" ng-model="building" type="checkbox" />
+								</div>
+
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="Sewage">Sewage Disposal:</label>
+									<input id="Sewage" class="form-control" ng-model="sewage" type="checkbox" />
+								</div>
+
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="WaterInsp">Water Quality:</label>
+									<input id="WaterInsp" class="form-control" ng-model="waterinsp" type="checkbox" />
+								</div>
+
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="RadonAir">Radon Air Quality:</label>
+									<input id="RadonAir" class="form-control" ng-model="radonair" type="checkbox" />
+								</div>
+
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="RadonWater">Radon Water Quality:</label>
+									<input id="RadonWater" class="form-control" ng-model="radonwater" type="checkbox" />
+								</div>
+
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="LeadPaint">Lead Based Paint:</label>
+									<input id="LeadPaint" class="form-control" ng-model="leadpaint" type="checkbox" />
+								</div>
+
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="Pests">Pests:</label>
+									<input id="Pests" class="form-control" ng-model="pests" type="checkbox" />
+								</div>
+
+								<div class="form-group col-sm-3">
+									<label class="control-label" for="HazardousWaste">Hazardous Waste:</label>
+									<input id="HazardousWaste" class="form-control" ng-model="waste" type="checkbox" />
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-6">
+							<div class="text-divider-container form-row">
+								<h3 class="divider-text">Operation Costs</h3>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group col-sm-12">
+									<label class="control-label" for="OpCostPeriod">Cost Period:</label>
+									<select id="OpCostPeriod" class="form-control" ng-model="opcostperiod">
+										<option ng-model="opcostperiod" ng-value="0">Yearly</option>
+										<option ng-model="opcostperiod" ng-value="1">Monthly</option>
 									</select>
-									<span class="input-group-addon">Years</span>
 								</div>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="InterestRate">Interest Rate (APR):</label>
-								<div class="input-group">
-									<input id="InterestRate" class="form-control" ng-model="interestrate" type="range" min="0.02" max="0.15" step="0.001" />
-									<span class="input-group-addon">{{interestrate * 100 | number:1}}%</span>
-								</div>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="Taxes">Property Taxes:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="Taxes" class="form-control" ng-model="taxes" type="number" min="0" />
-									<span class="input-group-addon">Yearly</span>
-								</div>
-							</div>
-						</div>
-						
-						<div class="text-divider-container form-row">
-							<h3 class="divider-text">Inspections</h3>
-						</div>
-						
-						<div class="form-row">
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="Building">General Building:</label>
-								<input id="Building" class="form-control" ng-model="building" type="checkbox" />
-							</div>
-						
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="Sewage">Sewage Disposal:</label>
-								<input id="Sewage" class="form-control" ng-model="sewage" type="checkbox" />
-							</div>
-						
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="WaterInsp">Water Quality:</label>
-								<input id="WaterInsp" class="form-control" ng-model="waterinsp" type="checkbox" />
-							</div>
-							
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="RadonAir">Radon Air Quality:</label>
-								<input id="RadonAir" class="form-control" ng-model="radonair" type="checkbox" />
-							</div>
 
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="RadonWater">Radon Water Quality:</label>
-								<input id="RadonWater" class="form-control" ng-model="radonwater" type="checkbox" />
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="HomeInsurance">Home Insurance:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="HomeInsurance" class="form-control" ng-model="insurance" type="number" min="0" />
+										<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
+										<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="Heat">Heating:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="Heat" class="form-control" ng-model="heat" type="number" min="0" />
+										<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
+										<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="Electricity">Electric:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="Electricity" class="form-control" ng-model="electric" type="number" min="0" />
+										<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
+										<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="Water">Water:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="Water" class="form-control" ng-model="water" type="number" min="0" />
+										<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
+										<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="Wifi">Internet/Wifi:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="Wifi" class="form-control" ng-model="wifi" type="number" min="0" />
+										<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
+										<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+									</div>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="Maintenance">Maintenance:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="Maintenance" class="form-control" ng-model="maintenance" type="number" min="0" />
+										<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
+										<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+									</div>
+								</div>
 							</div>
-							
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="LeadPaint">Lead Based Paint:</label>
-								<input id="LeadPaint" class="form-control" ng-model="leadpaint" type="checkbox" />
-							</div>
-							
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="Pests">Pests:</label>
-								<input id="Pests" class="form-control" ng-model="pests" type="checkbox" />
-							</div>
-							
-							<div class="form-group col-sm-3">
-								<label class="control-label" for="HazardousWaste">Hazardous Waste:</label>
-								<input id="HazardousWaste" class="form-control" ng-model="waste" type="checkbox" />
-							</div>
-						</div>
-						
-						<div class="text-divider-container form-row">
-							<h3 class="divider-text">Operation Costs</h3>
 						</div>
 
-						<div class="form-row">
-							<div class="form-group col-sm-12">
-								<label class="control-label" for="OpCostPeriod">Cost Period:</label>
-								<select id="OpCostPeriod" class="form-control" ng-model="opcostperiod">
-									<option ng-model="opcostperiod" ng-value="0">Yearly</option>
-									<option ng-model="opcostperiod" ng-value="1">Monthly</option>
-								</select>
+						<div class="col-lg-6">
+							<div class="text-divider-container form-row">
+								<h3 class="divider-text">Other</h3>
 							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="HomeInsurance">Home Insurance:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="HomeInsurance" class="form-control" ng-model="insurance" type="number" min="0" />
-									<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
-									<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+
+							<div class="form-row">
+								<div class="form-group col-sm-6">
+									<label class="control-label" for="TitleInsurance">Title Insurance (Optional):</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="TitleInsurance" class="form-control" ng-model="titleinsurance" type="number" min="0" />
+									</div>
 								</div>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="Heat">Heating:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="Heat" class="form-control" ng-model="heat" type="number" min="0" />
-									<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
-									<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+
+								<div class="form-group col-sm-6">
+									<label class="control-label" for="PrincipalOnly">Principal Only Payments:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="PrincipalOnly" class="form-control" ng-model="principalonly" type="number" min="0" />
+										<span class="input-group-addon">Monthly</span>
+									</div>
 								</div>
-							</div>
-						
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="Electricity">Electric:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="Electricity" class="form-control" ng-model="electric" type="number" min="0" />
-									<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
-									<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="FilingStatus">Tax Filing Status:</label>
+									<select id="FilingStatus" class="form-control" ng-model="filingrel">
+										<option ng-model="filingrel" ng-value="0">Single Filer</option>
+										<option ng-model="filingrel" ng-value="1">Married, Filing Jointly</option>
+									</select>
 								</div>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="Water">Water:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="Water" class="form-control" ng-model="water" type="number" min="0" />
-									<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
-									<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="IncomeBracket">Income Tax Bracket:</label>
+									<select id="IncomeBracket" class="form-control" ng-model="taxbracket">
+										<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="0">[$0 – $10,275]</option>
+										<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="0">[$0 – $20,550]</option>
+										<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="1">[$10,276 – $41,775]</option>
+										<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="1">[$20,551 – $83,550]</option>
+										<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="2">[$41,776 – $89,075]</option>
+										<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="2">[$83,551 – $178,150]</option>
+										<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="3">[$89,076 – $170,050]</option>
+										<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="3">[$178,151 – $340,100]</option>
+										<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="4">[$170,051 – $215,950]</option>
+										<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="4">[$340,101 – $431,900]</option>
+										<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="5">[$215,951 – $539,900]</option>
+										<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="5">[$431,901 – $647,850]</option>
+										<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="6">[$539,901+]</option>
+										<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="6">[$647,851+]</option>
+									</select>
 								</div>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="Wifi">Internet/Wifi:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="Wifi" class="form-control" ng-model="wifi" type="number" min="0" />
-									<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
-									<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+
+								<div class="form-group col-sm-4">
+									<label class="control-label" for="TaxFilingType">Tax Filing Type:</label>
+									<select id="TaxFilingType" class="form-control" ng-model="filingtype">
+										<option ng-model="filingtype" ng-value="0">Standard Deduction</option>
+										<option ng-model="filingtype" ng-value="1">Itemized Deduction</option>
+									</select>
 								</div>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="Maintenance">Maintenance:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="Maintenance" class="form-control" ng-model="maintenance" type="number" min="0" />
-									<span class="input-group-addon" ng-if="opcostperiod == 0">Yearly</span>
-									<span class="input-group-addon" ng-if="opcostperiod == 1">Monthly</span>
+
+								<div class="form-group col-sm-6">
+									<label class="control-label" for="SalvageValue">Resell Price:</label>
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="SalvageValue" class="form-control" ng-model="salvage" type="number" min="0" />
+									</div>
+								</div>
+
+								<div class="form-group col-sm-6">
+									<label class="control-label" for="DiscountRate">Discount Rate:</label>
+									<div class="input-group">
+										<input id="DiscountRate" class="form-control" ng-model="discountrate" type="range" min="0" max="0.15" step="0.001" />
+										<span class="input-group-addon">{{discountrate * 100 | number:1}}%</span>
+									</div>
 								</div>
 							</div>
 						</div>
-						
-						<div class="text-divider-container form-row">
-							<h3 class="divider-text">Other</h3>
-						</div>
-						
-						<div class="form-row">
-							<div class="form-group col-sm-6">
-								<label class="control-label" for="TitleInsurance">Title Insurance (Optional):</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="TitleInsurance" class="form-control" ng-model="titleinsurance" type="number" min="0" />
-								</div>
-							</div>
 
-							<div class="form-group col-sm-6">
-								<label class="control-label" for="PrincipalOnly">Principal Only Payments:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="PrincipalOnly" class="form-control" ng-model="principalonly" type="number" min="0" />
-									<span class="input-group-addon">Monthly</span>
+						<div class="col-lg-6">
+							<div class="form-row">
+								<div class="form-group col-sm-4">
+									<button onclick="navigate( 'nav-res' )" ng-click="submit()" class="form-control btn btn-success">Submit</button>
 								</div>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="FilingStatus">Tax Filing Status:</label>
-								<select id="FilingStatus" class="form-control" ng-model="filingrel">
-									<option ng-model="filingrel" ng-value="0">Single Filer</option>
-									<option ng-model="filingrel" ng-value="1">Married, Filing Jointly</option>
-								</select>
-							</div>
 
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="IncomeBracket">Income Tax Bracket:</label>
-								<select id="IncomeBracket" class="form-control" ng-model="taxbracket">
-									<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="0">[$0 – $10,275]</option>
-									<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="0">[$0 – $20,550]</option>
-									<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="1">[$10,276 – $41,775]</option>
-									<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="1">[$20,551 – $83,550]</option>
-									<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="2">[$41,776 – $89,075]</option>
-									<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="2">[$83,551 – $178,150]</option>
-									<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="3">[$89,076 – $170,050]</option>
-									<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="3">[$178,151 – $340,100]</option>
-									<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="4">[$170,051 – $215,950]</option>
-									<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="4">[$340,101 – $431,900]</option>
-									<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="5">[$215,951 – $539,900]</option>
-									<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="5">[$431,901 – $647,850]</option>
-									<option ng-if="filingrel == 0" ng-model="taxbracket" ng-value="6">[$539,901+]</option>
-									<option ng-if="filingrel == 1" ng-model="taxbracket" ng-value="6">[$647,851+]</option>
-								</select>
-							</div>
-							
-							<div class="form-group col-sm-4">
-								<label class="control-label" for="TaxFilingType">Tax Filing Type:</label>
-								<select id="TaxFilingType" class="form-control" ng-model="filingtype">
-									<option ng-model="filingtype" ng-value="0">Standard Deduction</option>
-									<option ng-model="filingtype" ng-value="1">Itemized Deduction</option>
-								</select>
-							</div>
-							
-							<div class="form-group col-sm-6">
-								<label class="control-label" for="SalvageValue">Resell Price:</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input id="SalvageValue" class="form-control" ng-model="salvage" type="number" min="0" />
+								<div class="form-group col-sm-4">
+									<button ng-click="clearform()" class="form-control btn btn-danger">Reset</button>
 								</div>
-							</div>
-							
-							<div class="form-group col-sm-6">
-								<label class="control-label" for="DiscountRate">Discount Rate:</label>
-								<div class="input-group">
-									<input id="DiscountRate" class="form-control" ng-model="discountrate" type="range" min="0" max="0.15" step="0.001" />
-									<span class="input-group-addon">{{discountrate * 100 | number:1}}%</span>
+
+								<div class="form-group col-sm-4">
+									<button ng-click="example()" class="form-control btn btn-info">Example</button>
 								</div>
-							</div>
-						</div>
-						
-						<div class="form-row">
-							<div class="form-group col-sm-4">
-								<button onclick="navigate( 'nav-res' )" ng-click="submit()" class="form-control btn btn-success">Submit</button>
-							</div>
-
-							<div class="form-group col-sm-4">
-								<button ng-click="clearform()" class="form-control btn btn-danger">Reset</button>
-							</div>
-
-							<div class="form-group col-sm-4">
-								<button ng-click="example()" class="form-control btn btn-info">Example</button>
 							</div>
 						</div>
 					</form>
@@ -323,49 +332,53 @@
 					<h2>Results</h2>
 					
 					<!-- snapshot -->
-					<table id="SnapshotTable">
-						<tr>
-							<td><h4>Address: </h4></td>
-							<td><h4><i>{{address}}</i></h4></td>
-						</tr>
-						<tr>
-							<td><h4>Purchase Price: </h4></td>
-							<td><h4><i>${{price | number:2}}</i></h4></td>
-						</tr>
-						<tr>
-							<td><h4>Down Payment: </h4></td>
-							<td><h4><i>${{downpayment | number:2}}, {{(downpayment/price)*100 | number:1}}%</i></h4></td>
-						</tr>
-						<tr ng-if="monthlypmt != 0">
-							<td><h4>Loan Terms: </h4></td>
-							<td><h4><i>${{price | number:2}}, {{loanterm}} Years, {{interestrate*100}}% APR</i></h4></td>
-						</tr>
-						<tr ng-if="monthlypmt != 0">
-							<td><h4>Monthly Loan Payment: </h4></td>
-							<td><h4><i>${{monthlypmt | number:2}}</i></h4></td>
-						</tr>
-						<tr>
-							<td><h4>Average Monthly Cost: </h4></td>
-							<td><h4><i>${{ (outputArray[1].subtotal + outputArray[outputArray.length-1].subtotal) / 24 | number:2}}</i></h4></td>
-						</tr>
-						<tr>
-							<td><h4>Cash to Close: </h4></td>
-							<td><h4><i>${{outputArray[0].total | number:2}}</i></h4></td>
-						</tr>
-					</table>
-					
+					<div class="col-md-6">
+						<table id="SnapshotTable">
+							<tr>
+								<td><h4>Address: </h4></td>
+								<td><h4><i>{{address}}</i></h4></td>
+							</tr>
+							<tr>
+								<td><h4>Purchase Price: </h4></td>
+								<td><h4><i>${{price | number:2}}</i></h4></td>
+							</tr>
+							<tr>
+								<td><h4>Down Payment: </h4></td>
+								<td><h4><i>${{downpayment | number:2}}, {{(downpayment/price)*100 | number:1}}%</i></h4></td>
+							</tr>
+							<tr ng-if="monthlypmt != 0">
+								<td><h4>Loan Terms: </h4></td>
+								<td><h4><i>${{price | number:2}}, {{loanterm}} Years, {{interestrate*100}}% APR</i></h4></td>
+							</tr>
+							<tr ng-if="monthlypmt != 0">
+								<td><h4>Monthly Loan Payment: </h4></td>
+								<td><h4><i>${{monthlypmt | number:2}}</i></h4></td>
+							</tr>
+							<tr>
+								<td><h4>Average Monthly Cost: </h4></td>
+								<td><h4><i>${{ (outputArray[1].subtotal + outputArray[outputArray.length-1].subtotal) / 24 | number:2}}</i></h4></td>
+							</tr>
+							<tr>
+								<td><h4>Cash to Close: </h4></td>
+								<td><h4><i>${{outputArray[0].total | number:2}}</i></h4></td>
+							</tr>
+						</table>
+					</div>
+
 					<!-- navigation buttons -->
-					<div id="ResultsButtons">
-						<div class="form-group col-sm-6">
-							<button onclick="navigate( 'nav-calc' )" class="btn btn-warning form-control" title="Edit">Edit</button>
-						</div>
-						<div class="form-group col-sm-6">
-							<button onclick="window.print()" class="btn btn-success form-control" title="Save">Save</button>
+					<div class="col-md-6">
+						<div id="ResultsButtons">
+							<div class="form-group col-sm-6">
+								<button onclick="navigate( 'nav-calc' )" class="btn btn-warning form-control" title="Edit">Edit</button>
+							</div>
+							<div class="form-group col-sm-6">
+								<button onclick="window.print()" class="btn btn-success form-control" title="Save">Save</button>
+							</div>
 						</div>
 					</div>
-					
+
 					<!-- charts -->
-					<div id="chartscontainer"></div>
+					<div id="chartscontainer" class="col-md-6"></div>
 					
 					<!-- results table -->
 					<table id="ResultsTable" ng-model="results" class="table table-striped">
@@ -443,54 +456,61 @@
 
 					<!-- inputs -->
 					<form>
+						<!--
 						<div class="form-group col-sm-6">
 							<label class="control-label" for="Exp_name">Name:</label>
 							<input id="Exp_name" class="form-control" ng-model="exp_name" ng-change="expChange()" type="text" />
-						</div>
-
-						<div class="form-group col-sm-6">
-							<label class="control-label" for="Exp_price">Price:</label>
-							<div class="input-group">
-								<span class="input-group-addon">$</span>
-								<input id="Exp_price" class="form-control" ng-model="exp_price" ng-change="expChange()" type="number" min="0.00" step="1000" />
+						</div> -->
+						<div class="col-lg-6">
+							<div class="form-group col-sm-6">
+								<label class="control-label" for="Exp_price">Loan Ammount:</label>
+								<div class="input-group">
+									<span class="input-group-addon">$</span>
+									<input id="Exp_price" class="form-control" ng-model="exp_price" ng-change="expChange()" type="number" min="0.00" step="1000" />
+								</div>
 							</div>
-						</div>
 
-						<div class="form-group col-sm-6">
-							<label class="control-label" for="Exp_down">Down Payment:</label>
-							<div class="input-group">
-								<input id="Exp_down" class="form-control" ng-model="exp_down" ng-change="expChange()" type="range" min="0.00" max="1" step="0.001" />
-								<span class="input-group-addon glyphicon glyphicon-chevron-left cpointer" ng-click="exp_down = exp_down - 0.001; expChange()" style="top: 0;"></span>
-								<span class="input-group-addon">{{ exp_down * 100 | number:1 }}%</span>
-								<span class="input-group-addon glyphicon glyphicon-chevron-right cpointer" ng-click="exp_down = exp_down + 0.001; expChange()" style="top: 0;"></span>
+							<div class="form-group col-sm-6">
+								<label class="control-label" for="Exp_down">Down Payment:</label>
+								<div class="input-group">
+									<input id="Exp_down" class="form-control" ng-model="exp_down" ng-change="expChange()" type="range" min="0.00" max="1" step="0.001" />
+									<span class="input-group-addon glyphicon glyphicon-chevron-left cpointer" ng-click="exp_down = exp_down - 0.001; expChange()" style="top: 0;"></span>
+									<span class="input-group-addon">{{ exp_down * 100 | number:1 }}%</span>
+									<span class="input-group-addon glyphicon glyphicon-chevron-right cpointer" ng-click="exp_down = exp_down + 0.001; expChange()" style="top: 0;"></span>
+								</div>
 							</div>
-						</div>
 
-						<div class="form-group col-sm-6">
-							<label class="control-label" for="Exp_loan">Loan Term:</label>
-							<div class="input-group">
-								<input id="Exp_loan" class="form-control" ng-model="exp_loan" ng-change="expChange()" type="range" min="5" max="40" step="5" />
-								<span class="input-group-addon">{{ exp_loan }} Years</span>
+							<div class="form-group col-sm-6">
+								<label class="control-label" for="Exp_loan">Loan Term:</label>
+								<div class="input-group">
+									<input id="Exp_loan" class="form-control" ng-model="exp_loan" ng-change="expChange()" type="range" min="5" max="40" step="5" />
+									<span class="input-group-addon">{{ exp_loan }} Years</span>
+								</div>
 							</div>
-						</div>
 
-						<div class="form-group col-sm-6">
-							<label class="control-label" for="Exp_int">Interest Rate:</label>
-							<div class="input-group">
-								<input id="Exp_int" class="form-control" ng-model="exp_int" ng-change="expChange()" type="range" min="0.01" max="0.25" step="0.001" />
-								<span class="input-group-addon glyphicon glyphicon-chevron-left cpointer" ng-click="exp_int = exp_int - 0.001; expChange()" style="top: 0;"></span>
-								<span class="input-group-addon">{{ exp_int * 100 | number:1 }}%</span>
-								<span class="input-group-addon glyphicon glyphicon-chevron-right cpointer" ng-click="exp_int = exp_int + 0.001; expChange()" style="top: 0;"></span>
+							<div class="form-group col-sm-6">
+								<label class="control-label" for="Exp_int">Interest Rate:</label>
+								<div class="input-group">
+									<input id="Exp_int" class="form-control" ng-model="exp_int" ng-change="expChange()" type="range" min="0.01" max="0.25" step="0.001" />
+									<span class="input-group-addon glyphicon glyphicon-chevron-left cpointer" ng-click="exp_int = exp_int - 0.001; expChange()" style="top: 0;"></span>
+									<span class="input-group-addon">{{ exp_int * 100 | number:1 }}%</span>
+									<span class="input-group-addon glyphicon glyphicon-chevron-right cpointer" ng-click="exp_int = exp_int + 0.001; expChange()" style="top: 0;"></span>
+								</div>
 							</div>
-						</div>
 
-						<div class="form-group col-sm-6">
-							<label class="control-label" for="Exp_pay">Principal Only Payment:</label>
-							<div class="input-group">
-								<input id="Exp_pay" class="form-control" ng-model="exp_pay" ng-change="expChange()" type="range" min="0" max="1000" step="10" />
-								<span class="input-group-addon glyphicon glyphicon-chevron-left cpointer" ng-click="exp_pay = exp_pay - 10; expChange()" style="top: 0;"></span>
-								<span class="input-group-addon">${{ exp_pay | number:0 }} / mo.</span>
-								<span class="input-group-addon glyphicon glyphicon-chevron-right cpointer" ng-click="exp_pay = exp_pay + 10; expChange()" style="top: 0;"></span>
+							<div class="form-group col-sm-6">
+								<label class="control-label" for="Exp_pay">Principal Only Payment:</label>
+								<div class="input-group">
+									<input id="Exp_pay" class="form-control" ng-model="exp_pay" ng-change="expChange()" type="range" min="0" max="1000" step="10" />
+									<span class="input-group-addon glyphicon glyphicon-chevron-left cpointer" ng-click="exp_pay = exp_pay - 10; expChange()" style="top: 0;"></span>
+									<span class="input-group-addon">${{ exp_pay | number:0 }} / mo.</span>
+									<span class="input-group-addon glyphicon glyphicon-chevron-right cpointer" ng-click="exp_pay = exp_pay + 10; expChange()" style="top: 0;"></span>
+								</div>
+							</div>
+
+							<div class="form-group col-sm-6">
+								<label class="control-label" for="Exp_baseline">Create Baseline</label>
+								<button id="Exp_baseline" class="btn btn-info form-control" ng-click="expCreateBase()">Create</button>
 							</div>
 						</div>
 
@@ -510,26 +530,73 @@
 						</div> -->
 
 						<!-- snapshot -->
-						<div id="ExpSnapshot" class="form-group col-sm-12">
+						<div id="ExpSnapshot" class="col-lg-6" style="display:contents;">
 							<table style="width: 100%;">
-								<tr>
+								<tr class="form-row">
+									<th>Name</th>
 									<th>Down Payment</th>
 									<th>Monthly Payment</th>
 									<th>Total Interest Paid</th>
 									<th>Total Cost</th>
 								</tr>
-								<tr>
-									<td>${{ exp_down * exp_price | number: 2 }}</td>
-									<td>${{ exp_MTG + exp_pay | number: 2 }}</td>
-									<td>${{ exp_total_interest | number: 2 }}</td>
-									<td>${{ exp_total_cost | number: 2 }}</td>
+								<tr ng-if="exp_baseline" class="form-row">
+									<td class="basscolor">Baseline</td>
+									<td class="basecolor">$<span class="textright">{{ exp_base_down | number: 2 }}</span></td>
+									<td class="basecolor">$<span class="textright">{{ exp_base_MTG | number: 2 }}</span></td>
+									<td class="basecolor">$<span class="textright">{{ exp_base_interest | number: 2 }}</span></td>
+									<td class="basecolor">$<span class="textright">{{ exp_base_cost | number: 2 }}</span></td>
+								</tr>
+								<tr ng-if="exp_baseline" class="form-row">
+									<td>Difference ($)</td>
+									<td ng-if="( exp_down * exp_price ) - exp_base_down > 0" class="red">$<span class="textright">+{{ ( exp_down * exp_price ) - exp_base_down | number: 2 }}</span></td>
+									<td ng-if="( exp_down * exp_price ) - exp_base_down <= 0" class="green">$<span class="textright">{{ ( exp_down * exp_price ) - exp_base_down | number: 2 }}</span></td>
+									<td ng-if="exp_MTG + exp_pay - exp_base_MTG > 0" class="red">$<span class="textright">+{{ exp_MTG + exp_pay - exp_base_MTG | number: 2 }}</span></td>
+									<td ng-if="exp_MTG + exp_pay - exp_base_MTG <= 0" class="green">$<span class="textright">{{ exp_MTG + exp_pay - exp_base_MTG | number: 2 }}</span></td>
+									<td ng-if="exp_total_interest - exp_base_interest > 0" class="red">$<span class="textright">+{{ exp_total_interest - exp_base_interest | number: 2 }}</span></td>
+									<td ng-if="exp_total_interest - exp_base_interest <= 0" class="green">$<span class="textright">{{ exp_total_interest - exp_base_interest | number: 2 }}</span></td>
+									<td ng-if="exp_total_cost - exp_base_cost > 0" class="red">$<span class="textright">+{{ exp_total_cost - exp_base_cost | number: 2 }}</span></td>
+									<td ng-if="exp_total_cost - exp_base_cost <= 0" class="green">$<span class="textright">{{ exp_total_cost - exp_base_cost | number: 2 }}</span></td>
+								</tr>
+								<tr ng-if="exp_baseline" class="form-row">
+									<td>Difference (%)</td>
+									<td ng-if="( exp_down * exp_price ) - exp_base_down > 0" class="red">
+										<span class="textright">+{{ [ ( exp_down * exp_price ) - exp_base_down ] / exp_base_down * 100 | number: 1 }}%</span>
+									</td>
+									<td ng-if="( exp_down * exp_price ) - exp_base_down <= 0" class="green">
+										<span class="textright">{{ [ ( exp_down * exp_price ) - exp_base_down ] / exp_base_down * 100 | number: 1 }}%</span>
+									</td>
+									<td ng-if="exp_MTG + exp_pay - exp_base_MTG > 0" class="red">
+										<span class="textright">+{{ ( exp_MTG + exp_pay - exp_base_MTG ) / exp_base_MTG * 100 | number: 1 }}%</span>
+									</td>
+									<td ng-if="exp_MTG + exp_pay - exp_base_MTG <= 0" class="green">
+										<span class="textright">{{ ( exp_MTG + exp_pay - exp_base_MTG ) / exp_base_MTG * 100 | number: 1 }}%</span>
+									</td>
+									<td ng-if="exp_total_interest - exp_base_interest > 0" class="red">
+										<span class="textright">+{{ ( exp_total_interest - exp_base_interest ) / exp_base_interest * 100 | number: 1 }}%</span>
+									</td>
+									<td ng-if="exp_total_interest - exp_base_interest <= 0" class="green">
+										<span class="textright">{{ ( exp_total_interest - exp_base_interest ) / exp_base_interest * 100 | number: 1 }}%</span>
+									</td>
+									<td ng-if="exp_total_cost - exp_base_cost > 0" class="red">
+										<span class="textright">+{{ ( exp_total_cost - exp_base_cost ) / exp_base_cost * 100 | number: 1 }}%</span>
+									</td>
+									<td ng-if="exp_total_cost - exp_base_cost <= 0" class="green">
+										<span class="textright">{{ ( exp_total_cost - exp_base_cost ) / exp_base_cost * 100 | number: 1 }}%</span>
+									</td>
+								</tr>
+								<tr class="form-row">
+									<td>Current</td>
+									<td>$<span class="textright">{{ exp_down * exp_price | number: 2 }}</span></td>
+									<td>$<span class="textright">{{ exp_MTG + exp_pay | number: 2 }}</span></td>
+									<td>$<span class="textright">{{ exp_total_interest | number: 2 }}</span></td>
+									<td>$<span class="textright">{{ exp_total_cost | number: 2 }}</span></td>
 								</tr>
 							</table>
 						</div>
 					</form>
 
 					<!-- graphs -->
-					<div id="ExploreCharts"></div>
+					<div id="ExploreCharts" class="col-lg-6"></div>
 
 					<!-- compare
 					<div id="Compare">
@@ -551,89 +618,6 @@
 				<!-- close explore page -->
 			</div>
 			<!-- close angular -->
-			
-			<!-- info page -->
-			<div id="Info" style="display: none;">
-				<h2>Info</h2>
-
-				<h3>Looking to purchase your first home, find a vacation home, downsize, or simply want to know more about home ownership?</h3>
-				<p>I'd love to talk!  Please reach out to contact the creator of this calculator at the information listed below!</p>
-				
-				<!-- credits -->
-				<div class="media">
-					<div class="media-left">
-						<img src="styling/goldbg.jpeg" class="media-object" style="width: 130px;" />
-					</div>
-					<div class="media-body">
-						<h3 class="media-heading">Mark Comeau</h3>
-						<p>Realty One Group Next Level</p>
-						<p><a href="https://linktr.ee/SoldbyComeau">https://linktr.ee/SoldbyComeau</a></p>
-						<p>265 S River Road</p>
-						<p>Bedford, NH 03110</p>
-						<p>m: (603) 370-7806 | o: (888) 888-SOLD</p>
-					</div>
-				</div>
-
-				<h3>Want to know more about closing costs?  Look no further!</h3>
-				<p>You can find an interactive calculator sponsored by Cohen Closing and Title at the link below!</p>
-						
-				<div style="text-align: center;">
-					<a href="https://www.cohenclosing.com/quotecalculator">
-						<p>
-							<span class="glyphicon glyphicon-info-sign"></span>
-							Calculate your closing costs here!
-						</p>
-					</a>
-				</div>
-
-				<h3>Want to know more about operation costs, look here!</h3>
-				<p>Here is a helpful article from SoFi.com that outlines the average costs of living in New Hampshire!</p>
-						
-				<div style="text-align: center;">
-					<a href="https://www.sofi.com/cost-of-living-in-new-hampshire/">
-						<p>
-							<span class="glyphicon glyphicon-info-sign"></span>
-							Learn more about operation costs here!
-						</p>
-					</a>
-				</div>
-
-				<h3>What kind of tax benefits are there to home ownership?</h3>
-				<p>Here is another helpful article from Nerdwallet that outlines exactly what you can write off come tax time!</p>
-						
-				<div style="text-align: center;">
-					<a href="https://www.nerdwallet.com/article/mortgages/tax-deductions-for-homeowners">
-						<p>
-							<span class="glyphicon glyphicon-info-sign"></span>
-							Learn more about tax deductions here!
-						</p>
-					</a>
-				</div>
-
-				<h3>Wondering what the discount rate is?</h3>
-				<p>Most of you probably just glossed over it, but for those who want to know more you came to the right place!  The discount rate
-					is used to calculate the future or present value of money.  This concept is commonly used in business to derive the value of investments 
-					in the future to account for uncertainty, opportunity costs, and expected income and growth.  It's something people do almost subconsiously 
-					but when dealing with larger sums of money it can have a huge impact!
-				</p>
-				<p>Say you were offered a choice of $100 now, or $110 in a year.  Which 
-					would you take?  If you took the money now, you could invest it elsewhere, say in the S&P to earn 8% (or $8) over that year.  Then it 
-					would be more beneficial to take the $110 in a year.  In this situation, you would need to have some investment that would make greater than 10% 
-					per year in order for it to be more beneficial to take the money now.  For simplicity sake, you could use the FED's target of 3% inflation per year 
-					to calculate what your home costs in the future are worth today.
-				</p>
-				<p>If you would like to dig deeper into this economic way of viewing investments, I've linked an article below that explains it in greater detail!</p>
-						
-				<div style="text-align: center;">
-					<a href="https://costarmanager.com/the-internets-most-simple-explanations-of-discount-rate-present-value-and-net-present-value/">
-						<p>
-							<span class="glyphicon glyphicon-info-sign"></span>
-							Learn more about discount rates and net present value here!
-						</p>
-					</a>
-				</div>
-			</div>
-			<!-- close info page -->
 		</div>
 		<!-- close main container -->
 	</body>
