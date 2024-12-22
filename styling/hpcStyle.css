@@ -100,3 +100,18 @@ ul{
 	max-width: 900px;
 	max-height: 450px;
 }
+#ExpSnapshot td{
+	padding: 0.25em 1em;
+}
+#ExpSnapshot .textright{
+	float: right;
+}
+#ExpSnapshot .basecolor{
+	color: rgb(43, 177, 248);
+}
+#ExpSnapshot .green{
+	color: rgb(86, 190, 112);
+}
+#ExpSnapshot .red{
+	color: rgb(227, 37, 37);	
+}
